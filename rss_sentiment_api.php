@@ -83,9 +83,14 @@ function response($rss_url,$bd,$q){
 		$dsc = $entry->description;
 		
 		$cmp += $analyzer->getSentiment($title)["compound"];
-		//echo "title[".$title."]\n";
+		echo "title[".$title."]\n";
+		echo "descr[".$dsc."]\n";
 		$data[] = ["title" => $title , "desc" => $dsc];
 		$c = 1;
+		$dt = "";
+		echo "\n-------------------------------------------------------------------\n";
+	    echo json_encode($data);
+		echo "\n--------------------------------------------------------------------\n";
 		if ($dsc != null)
 		{
 			$phrases = preg_split($pattern, $dsc);
@@ -94,11 +99,15 @@ function response($rss_url,$bd,$q){
 			//	echo "phrase[".$phrase."]\n";
 				$cmp += $analyzer->getSentiment($phrase)["compound"];
 				$c++;
-				$data["desc"] += $phrase;
+				//$dt .= $phrase;
 			}// end for
-			
+			//$data["desc"] = $dt ;
 		}// end if
 	}
+	echo "\n-------------------------------------------------------------------\n";
+	echo json_encode($data);
+	echo "\n--------------------------------------------------------------------\n";
+	
 	$res["news_count"] = count($entries);
 	$res["rss"] = $rss_url;
 	$res["newer_then"] = $bd;
