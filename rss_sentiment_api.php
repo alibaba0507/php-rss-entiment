@@ -94,8 +94,9 @@ function response($rss_url,$bd,$q){
 			//	echo "phrase[".$phrase."]\n";
 				$cmp += $analyzer->getSentiment($phrase)["compound"];
 				$c++;
+				$data["desc"] += $phrase;
 			}// end for
-			$data["desc"] = $phrases;
+			
 		}// end if
 	}
 	$res["news_count"] = count($entries);
