@@ -61,6 +61,7 @@ function response($rss_url,$bd,$q){
 		$cmp += $analyzer->getSentiment($title)["compound"];
 		//echo "title[".$title."]\n";
 		$data[] = ["title" => $title , "desc" => $dsc];
+		$c = 1;
 		if ($dsc != null)
 		{
 			$phrases = preg_split($pattern, $dsc);
@@ -68,6 +69,7 @@ function response($rss_url,$bd,$q){
 			{
 			//	echo "phrase[".$phrase."]\n";
 				$cmp += $analyzer->getSentiment($phrase)["compound"];
+				$c++;
 			}// end for
 			$data["desc"] = $phrases;
 		}// end if
@@ -77,7 +79,7 @@ function response($rss_url,$bd,$q){
 	$res["newer_then"] = $bd;
 	$res["query"] = $q;
 	$res["data"] = $data;
-	$res["sentiment"] = $cmp;
+	$res["sentiment"] = $cmp/$c;
 	echo json_encode($res);
 }
 ?>
