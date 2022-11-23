@@ -1,0 +1,11 @@
+{
+    "require": {
+        "tobscure/json-api":"*",
+		"davmixcool/php-sentiment-analyzer":"^1.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Src\\": "src/"
+        }
+    }
+}
