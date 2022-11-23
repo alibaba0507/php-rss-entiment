@@ -9,8 +9,8 @@ if (!isset($_GET['t']) || (trim($_GET['t'],'\'"')!=$JWT_SECRET_KEY))
 {
 	$arr_err["errMsg"] = "Missing Token";
 	echo json_encode($arr_err);
-	echo "\n".$_GET['t'];
-	echo "\n".$JWT_SECRET_KEY;
+	//echo "\n".$_GET['t'];
+	//echo "\n".$JWT_SECRET_KEY;
 	return;
 }
 if (!isset($_GET['rss_url']) || (isset($_GET['rss_url']) && $_GET['rss_url']==""))
@@ -20,8 +20,8 @@ if (!isset($_GET['rss_url']) || (isset($_GET['rss_url']) && $_GET['rss_url']==""
 	return;
 }
 $bd = (isset($_GET['bd']))?trim($_GET['bd'],'\'"'):1;
-$q = (isset($_GET['q']))?trim($_GET['q'],'\'"'):"";
-$rss_url = trim($_GET['rss_url'],'\'"');
+$q = (isset($_GET['q']))?trim($_GET['q'],'\'"'):""; // comma separated multiple queries
+$rss_url = trim($_GET['rss_url'],'\'"'); // comma separated multy rss url's
 
 response($rss_url,$bd,$q);
 function response($rss_url,$bd,$q){
@@ -40,12 +40,27 @@ function response($rss_url,$bd,$q){
 	$tm = strtotime('-'.$bd.'days', time());
 	$param = [$tm,$q];
 	$entries = array_filter($entries,function ($a) use ($param)
-						{ 
+						{  $srch[];
+						   if (strlen($param[1]) > 0)
+							   $srch = explode(",",$param[1]);
+						   if (strtotime($a->pubDate) > $param[0] )
+						   {
+							    foreach($srch as $s)
+								{
+								  if ((strpos(strtolower($a->title), strtolower($s)) !== false)
+          									|| ($a->description != null && strpos(strtolower($a->description), strtolower($s)) !== false))
+										return true;
+								}
+								return count($srch) > 0?false:true;
+						   }else
+							   return false;
 						   // echo "pubdate[".($a->description)."]\n";
-							return (strtotime($a->pubDate) > $param[0] 
+							/*
+							 return (strtotime($a->pubDate) > $param[0] 
 							        && 
 									(strlen($param[1]) == 0 || (strlen($param[1]) > 0 && ((strpos(strtolower($a->title), strtolower($param[1])) !== false)
           									|| ($a->description != null && strpos(strtolower($a->description), strtolower($param[1])) !== false)))));
+					        */
 					    } 
 					);
 	$pattern = "/(?<=[^A-Z].[.?]) +(?=[A-Z])/";
