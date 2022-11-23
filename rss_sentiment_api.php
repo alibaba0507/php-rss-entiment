@@ -1,6 +1,7 @@
 <?php
 require 'vendor/autoload.php';
 Use Sentiment\Analyzer;
+
 header("Content-Type:application/json");
 $JWT_SECRET_KEY = 't1NP63m4wnBg6nyHYKfmc2TpCOGI4nss';
 $arr_err = array("errCode" => 400,"errMsg" =>"Invalid Request");
@@ -63,8 +64,16 @@ function response($rss_url,$bd,$q){
 					        */
 					    } 
 					);
+   /* foreach($entries as $entry)
+	{
+		$title = $entry->title;
+		$dsc = $entry->description;
+		echo "title[" . $title."]\n";
+		echo "descr[" . $dsc."]\n";
+	}
+	*/
 	$pattern = "/(?<=[^A-Z].[.?]) +(?=[A-Z])/";
-	$analyzer = new Analyzer();
+    $analyzer = new Analyzer();	
 	$cmp = 0.0;
 	//echo "entries[".count($entries)."]\n";
 	$data = [];
