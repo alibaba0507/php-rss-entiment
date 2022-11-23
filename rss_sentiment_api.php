@@ -40,7 +40,7 @@ function response($rss_url,$bd,$q){
 	$tm = strtotime('-'.$bd.'days', time());
 	$param = [$tm,$q];
 	$entries = array_filter($entries,function ($a) use ($param)
-						{  $srch[];
+						{  $srch = [];
 						   if (strlen($param[1]) > 0)
 							   $srch = explode(",",$param[1]);
 						   if (strtotime($a->pubDate) > $param[0] )
