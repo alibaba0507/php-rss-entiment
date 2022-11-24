@@ -24,7 +24,7 @@ function google_sheet_to_csv($html_link = NULL){
   */
     $csv = "";
     $tables     = $dom->getElementsByTagName('table');
-    echo "-------------- tables[".$tables->length."]-----------------";   
+    //echo "-------------- tables[".$tables->length."]-----------------";   
     //for ($cnt = 0;$cnt < $tables->length - 1;$cnt++)
     $tables_csv = [];
     foreach($tables as $cnt => $tbl) 
@@ -51,51 +51,6 @@ function google_sheet_to_csv($html_link = NULL){
     //file_put_contents("result.csv",$csv);
     return $tables_csv;//$csv;
 }
-function google_sheet($url = NULL) {
- 
-    $array = array();
- 
-    if ($url):
-       // initialize curl
-       $curl = curl_init();
-       curl_setopt($curl, CURLOPT_URL, $url);
-       curl_setopt($curl, CURLOPT_HEADER, 0);
-       curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
- 
-       // get the spreadsheet data using curl
-       $sheet = curl_exec($curl);
-       curl_close($curl);
-       echo json_encode( $sheet);
-       // find the table pattern and return the mark-up
-       preg_match('/(<table[^>]+>)(.+)(<\/table>)/', $sheet, $matches);
-       $data = $matches['0'];
-       //echo json_encode( $data);
-       // convert the HTML (XML) mark-up to JSON
-       $cells_xml = new SimpleXMLElement($data);
-       $cells_json = json_encode($cells_xml);
-       $cells = json_decode($cells_json, TRUE);
-       echo json_encode( $cells);
-    endif;
- 
-    // Convert the JSON array to an array of just the table data
-    // This will strip out any Google Sheets formatting and identifiers if they exist
-    if ( is_array($cells) ):
-       foreach ($cells['tbody']['tr'] as $row => $row_data):
-          $column = 'A';
-          foreach ($row_data['td'] as $column_index => $cell):
-            echo json_encode( $cell);
-             // Check that the cell is populated and get the value.
-             if (!is_array($cell)):
-                $array[($row + 1)][$column++] = $cell;
-             elseif (isset($cell['div'])):
-                $array[($row + 1)][$column++] = $cell['div'];
-             endif;
-          endforeach;
-       endforeach;
-    endif;
-   
-    return $array;
- }
 
  /*
  * Convert array values into grid values
