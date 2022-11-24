@@ -20,12 +20,12 @@ if (!isset($_GET['rss_url']) || (isset($_GET['rss_url']) && $_GET['rss_url']==""
 	echo json_encode($arr_err);
 	return;
 }
-$bd = (isset($_GET['bd']))?trim($_GET['bd'],'\'"'):1;
+$bd = (isset($_GET['bd']))?trim($_GET['bd'],'\'"'):1;// before in days
 $q = (isset($_GET['q']))?trim($_GET['q'],'\'"'):""; // comma separated multiple queries
 $rss_url = trim($_GET['rss_url'],'\'"'); // comma separated multy rss url's
-
-response($rss_url,$bd,$q);
-function response($rss_url,$bd,$q){
+$result = (isset($_GET['return_rss']));// return find results if set , this is to preserve bandwith
+response($rss_url,$bd,$q,$result);
+function response($rss_url,$bd,$q,$result){
 	/*if ($bd == null || $bd == "")
 		$bd = 1;
 	if ($q == null)
@@ -83,36 +83,37 @@ function response($rss_url,$bd,$q){
 		$dsc = $entry->description;
 		
 		$cmp += $analyzer->getSentiment($title)["compound"];
-		echo "title[".$title."]\n";
-		echo "descr[".$dsc."]\n";
-		$data[] = ["title" => $title , "desc" => $dsc];
+		//echo "title[".$title."]\n";
+		//echo "descr[".$dsc."]\n";
 		$c = 1;
-		$dt = "";
-		echo "\n-------------------------------------------------------------------\n";
-	    echo json_encode($data);
-		echo "\n--------------------------------------------------------------------\n";
+		$feed = new stdClass;
+		$feed->title = $title;
+		$data[] = $feed ;
 		if ($dsc != null)
 		{
 			$phrases = preg_split($pattern, $dsc);
+			$dt = "";
 			foreach($phrases as $phrase)
 			{
 			//	echo "phrase[".$phrase."]\n";
 				$cmp += $analyzer->getSentiment($phrase)["compound"];
 				$c++;
-				//$dt .= $phrase;
+				$dt .= $phrase;
 			}// end for
-			//$data["desc"] = $dt ;
+			$feed->descr  = $dt;
+			
 		}// end if
+		
 	}
-	echo "\n-------------------------------------------------------------------\n";
-	echo json_encode($data);
-	echo "\n--------------------------------------------------------------------\n";
+	//echo "\n-------------------------------------------------------------------\n";
+	//echo json_encode($data);
+	//echo "\n--------------------------------------------------------------------\n";
 	
 	$res["news_count"] = count($entries);
 	$res["rss"] = $rss_url;
 	$res["newer_then"] = $bd;
 	$res["query"] = $q;
-	$res["data"] = $data;
+	$res["data"] = ($result)?$data:"NA"; // to preserve data bandwidth
 	$res["sentiment"] = $cmp/$c;
 	echo json_encode($res);
 }
