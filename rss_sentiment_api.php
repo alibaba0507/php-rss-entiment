@@ -77,6 +77,7 @@ function response($rss_url,$bd,$q,$result){
 	$cmp = 0.0;
 	//echo "entries[".count($entries)."]\n";
 	$data = [];
+	$c = 1;
 	foreach($entries as $entry)
 	{
 		$title = $entry->title;
