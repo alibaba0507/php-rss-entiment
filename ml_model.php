@@ -52,16 +52,48 @@ function google_sheet_to_csv($html_link = NULL){
     return $tables_csv;//$csv;
 }
 
+/*
+ * Look for a model and search entire array ($a)
+ * to match this model and if found will save 
+ * array index to array witch will return 
+*/
+function checkPatterns($a,$patternStart,$len,$gridRows,$minMatch = 0.6)
+{
+   $model = createPattern($a,$patternStart,$len,$gridRows);
+   $foundAt = [];
+   for ($i = $patternStart + $len;$i < count($a);$i++)
+   {
+      $comparePattern = createPattern($a,$i,$len,$gridRows);
+      $diff = array_diff_assoc($model,$comparePattern);
+      if (count($diff) <= 0) {
+         // 100% match
+         $foundAt[] = $i;
+         $i += $len;
+      }else if (count($diff) > 0 && (1 - ((float)count($diff)/(float)count($model))) >= $minMatch)
+      {
+         $foundAt[] = $i;
+         $i += $len;
+      }
+   }// end for
+   return $foundAt;
+}
  /*
  * Convert array values into grid values
  * by creating the grid based on min , max array values
  * and rows parameter and place array elements 
  * inside the grid based on elemenet possition and value
+ *  @param $a - array of values
+ *  @param $start - start index of range
+ *  @parma $len - length for the range
+ *  @param $rows - for creating grid for the pattern 
+ *  slice the $a from $start with $len and create pattern based
+ *  on grid created on $rows  
  */
- function createPattern($arr,$rows)
+ function createPattern($a,$start,$len,$rows)
  {
-    if (!is_array($arr))
+    if (!is_array($a))
      return -1;
+   $arr = array_slice($a,$start,$len);
     $max = max($arr);
     $min = min($arr);
     $d_col = ($max-$min)/(int)$rows;
