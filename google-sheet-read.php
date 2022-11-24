@@ -18,24 +18,26 @@ $table = google_sheet_to_csv($url);
 $data = $table[$tbl_no];
 $cols = explode(",",$col_no);
 echo "---------------------------------------\n";
-echo json_encode($cols);
+echo json_encode($data);
 $rows = explode("\n",$data);
 $arr = [];
-for ($j = 0;$j < count($rows);$j++)
-{
-    $c = explode(",",$rows[$j]);
-    echo "------------row---------------------------\n";
+
+    //echo "------------row---------------------------\n";
     //echo json_encode($c);
     for ($i = 0;$i < count($cols);$i++)
     {
         if (strlen($cols[$i]) <= 0) continue;
         if (count($arr) <= $i || !is_array($arr[$i]));
-            $arr[$i] = array();
-        array_push( $arr[$i], $c[(int)$cols[$i]]);
-        echo "------------ col[".((int)$cols[$i])."] ---------------------------\n".$c[(int)$cols[$i]]."\n";
+            $arr[$i] = "";
+            for ($j = 0;$j < count($rows);$j++)
+            {
+                $c = explode(",",$rows[$j]);
+                $arr[$i] .= $c[(int)$cols[$i]].",";
+            }
+        //echo "------------ col[".((int)$cols[$i])."] ---------------------------\n".$c[(int)$cols[$i]]."\n";
 
     }
-}
+
 echo "---------------------- END -----------------\n";
 echo json_encode($arr);
 /*echo "<table>";
