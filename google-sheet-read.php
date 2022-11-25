@@ -48,14 +48,24 @@ $startIndex = 2;
 $len = 5;
 $accuracy = 0.5;
 $gridRows = 3;
+$patterns = [];
 for ($i = 0;$i < count($arr);$i++)
 {
    $a = explode(",",$arr[$i]);
    // remove empty values
    $a = array_filter($a, function($v){return !empty($v) || $v === 0 || is_numeric($v);});
    $found = checkPatterns($a,$startIndex,$len,$gridRows,$accuracy); // array of indexes of patterns
-   print_r($found);
+   $patterns[] = $found;
+   
 }
+$disp = $patterns[0];
+if (count($patterns) > 1)
+{
+    for ($i = 1;$i < count($patterns);$i++)
+        $disp = array_intersect($disp,$patterns[$i]);
+}
+print_r($patterns);
+print_r($disp);
 //echo "---------------------- END -----------------\n";
 //echo json_encode($arr);
 //print_r($arr);
