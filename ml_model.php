@@ -1,7 +1,7 @@
 <?php
 
 function google_sheet_to_csv($html_link = NULL){
-    $local_html = "sheets.html";
+    //$local_html = "sheets.html";
     $file_contents = file_get_contents($html_link);
     /*$curl = curl_init();
        curl_setopt($curl, CURLOPT_URL, $html_link);
@@ -12,7 +12,7 @@ function google_sheet_to_csv($html_link = NULL){
        $file_contents = curl_exec($curl);
        curl_close($curl);
     */
-    file_put_contents($local_html,$file_contents);
+    //file_put_contents($local_html,$file_contents);
     
     $dom        = new DOMDocument();  
     $html       = @$dom->loadHTML('<?xml encoding="utf-8" ?>' .$file_contents);  //Added a @ to hide warnings - you might remove this when testing
@@ -61,7 +61,7 @@ function checkPatterns($a,$patternStart,$len,$gridRows,$minMatch = 0.6)
 {
    $model = createPattern($a,$patternStart,$len,$gridRows);
    $foundAt = [];
-   for ($i = $patternStart + $len;$i < count($a);$i++)
+   for ($i = $patternStart + $len;$i < count($a)-$len;$i++)
    {
       $comparePattern = createPattern($a,$i,$len,$gridRows);
       $diff = array_diff_assoc($model,$comparePattern);
@@ -94,9 +94,12 @@ function checkPatterns($a,$patternStart,$len,$gridRows,$minMatch = 0.6)
     if (!is_array($a))
      return -1;
    $arr = array_slice($a,$start,$len);
+   //echo "-------------------- Slice stsrt[" .$start . "] len[" . $len ."]\n<br/>";
+   //print_r($arr);
     $max = max($arr);
     $min = min($arr);
     $d_col = ($max-$min)/(int)$rows;
+    //echo "-------------- max[".$max."]min[".$min."] rows[".$rows."][".count($arr)."]-------\n<br/>";
     $d_row = count($arr)/(int)$rows;
     $out = [];
     for ($i = 0;$i < count($arr);$i++)

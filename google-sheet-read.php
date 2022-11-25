@@ -6,6 +6,7 @@ header("Content-Type:application/json");
 $arr_err = array("errCode" => 400,"errMsg" =>"Invalid Request");
 $tbl_no = (!isset($_GET['tbl_cnt']))?0:(int)trim($_GET["tbl_cnt"],"\"'");//(int)$_GET['tbl_cnt'];
 $col_no = (!isset($_GET['col_no']))?"0":trim($_GET["col_no"],"\"'");//$_GET['col_no'];
+// patterns parameters , startIndex,len , accuracy (0 to 1
 if (!isset($_GET['s']) )
 {
     //echo "-----------------------2 ---------------\n";
@@ -27,37 +28,36 @@ $cols = explode(",",$col_no);
 $rows = explode("\n",$data);
 $arr = [];
 
-    //echo "------------row---------------------------\n";
-    //echo json_encode($c);
-    for ($i = 0;$i < count($cols);$i++)
-    {
-        if (strlen($cols[$i]) <= 0) continue;
-        if (count($arr) <= $i || !is_array($arr[$i]));
-            $arr[$i] = "";
-            for ($j = 0;$j < count($rows);$j++)
-            {
-                $c = explode(",",$rows[$j]);
-                $arr[$i] .= $c[(int)$cols[$i]].",";
-               // echo "--------------[".$c[(int)$cols[$i]]."][".$i."]-------------\n";
-            }
-        //echo "------------ col[".((int)$cols[$i])."] ---------------------------\n".$c[(int)$cols[$i]]."\n";
+//echo "------------row---------------------------\n";
+//echo json_encode($c);
+for ($i = 0;$i < count($cols);$i++)
+{
+    if (strlen($cols[$i]) <= 0) continue;
+    if (count($arr) <= $i || !is_array($arr[$i]));
+        $arr[$i] = "";
+        for ($j = 0;$j < count($rows);$j++)
+        {
+            $c = explode(",",$rows[$j]);
+            $arr[$i] .= $c[(int)$cols[$i]].",";
+            // echo "--------------[".$c[(int)$cols[$i]]."][".$i."]-------------\n";
+        }
+    //echo "------------ col[".((int)$cols[$i])."] ---------------------------\n".$c[(int)$cols[$i]]."\n";
 
-    }
-
+}
+$startIndex = 2;
+$len = 5;
+$accuracy = 0.5;
+$gridRows = 3;
+for ($i = 0;$i < count($arr);$i++)
+{
+   $a = explode(",",$arr[$i]);
+   // remove empty values
+   $a = array_filter($a, function($v){return !empty($v) || $v === 0 || is_numeric($v);});
+   $found = checkPatterns($a,$startIndex,$len,$gridRows,$accuracy); // array of indexes of patterns
+   print_r($found);
+}
 //echo "---------------------- END -----------------\n";
-echo json_encode($arr);
-/*echo "<table>";
+//echo json_encode($arr);
+//print_r($arr);
 
-foreach ($table as $row):
-    echo "<tr>";
-    
-    foreach ($row as $cell):
-        echo "<td>" . $cell . "</td>";
-    endforeach;
-    
-    echo "</tr>";
-endforeach;
-
-echo "</table>";
-*/
 ?>
