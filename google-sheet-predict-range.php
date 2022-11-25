@@ -6,6 +6,13 @@ header("Content-Type:application/json");
 $arr_err = array("errCode" => 400,"errMsg" =>"Invalid Request");
 $tbl_no = (!isset($_GET['tbl_cnt']))?0:(int)trim($_GET["tbl_cnt"],"\"'");//(int)$_GET['tbl_cnt'];
 $col_no = (!isset($_GET['col_no']))?"0":trim($_GET["col_no"],"\"'");//$_GET['col_no'];
+$len =  (!isset($_GET['l']))?"5":trim($_GET["l"],"\"'");//$_GET['col_no'];
+if (!isset($_GET['p']))
+{
+    $arr_err["errMsg"] = "Missing Pattern Indexes";
+	echo json_encode($arr_err);
+}    
+$patterns = json_decode( trim($_GET["p"],"\"'"));//$_GET['col_no']; 
 // patterns parameters , startIndex,len , accuracy (0 to 1
 if (!isset($_GET['s']) )
 {
@@ -44,30 +51,20 @@ for ($i = 0;$i < count($cols);$i++)
     //echo "------------ col[".((int)$cols[$i])."] ---------------------------\n".$c[(int)$cols[$i]]."\n";
 
 }
-$startIndex = 2;
-$len = 5;
-$accuracy = 0.5;
-$gridRows = 3;
-$patterns = [];
+
+$res  =[];
 for ($i = 0;$i < count($arr);$i++)
 {
    $a = explode(",",$arr[$i]);
    // remove empty values
-   $a = array_filter($a, function($v){return !empty($v) || $v === 0 || is_numeric($v);});
-   $found = checkPatterns($a,$startIndex,$len,$gridRows,$accuracy); // array of indexes of patterns
-   $patterns[] = $found;
+   $a = array_filter($a, function($v){return is_numeric(trim($v," ")) === true;});
+
+   $res = patternRange($a,$patterns,$len);
+   break;  
    
 }
-$disp = $patterns[0];
-if (count($patterns) > 1)
-{
-    for ($i = 1;$i < count($patterns);$i++)
-        $disp = array_intersect($disp,$patterns[$i]);
-}
-print_r($patterns);
-print_r($disp);
-//echo "---------------------- END -----------------\n";
-//echo json_encode($disp);
+
+echo json_encode($res);
 //print_r($arr);
 
 ?>

@@ -51,7 +51,27 @@ function google_sheet_to_csv($html_link = NULL){
     //file_put_contents("result.csv",$csv);
     return $tables_csv;//$csv;
 }
-
+function patternRange($a,$startIndex,$len)
+{
+    if (!is_array($a))
+     return -1;
+    if (!is_array($startIndex))
+        return -1;
+    $top = 0.0;
+    $bottom = 0.0;
+    for ($i = 0;$i < count($startIndex);$i++)
+    {
+        $arr = array_slice($a,$startIndex[$i] - ($len-1),$len); // backwards
+        $max = max($arr);
+        $min = min($arr);
+        $top += (trim($max," \"'") - trim($a[$startIndex[$i]]," \"'"));
+        $bottom += (trim($a[$startIndex[$i]]," \"'") - trim($min," \"'") );
+    }
+    $top /= count($startIndex);
+    $bottom /= count($startIndex);
+    $ret = [$top,$bottom];
+    return $ret;
+}
 /*
  * Look for a model and search entire array ($a)
  * to match this model and if found will save 
