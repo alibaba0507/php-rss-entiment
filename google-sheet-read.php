@@ -67,7 +67,7 @@ if (count($patterns) > 1)
 print_r($patterns);
 print_r($disp);
 //echo "---------------------- END -----------------\n";
-//echo json_encode($arr);
+//echo json_encode($disp);
 //print_r($arr);
 
 ?>
