@@ -74,7 +74,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost/dev/rss-sentiment/rss_sentiment_api?t=t1NP63m4wnBg6nyHYKfmc2TpCOGI4nss&rss_url=\"https://www.myfxbook.com/rss/latest-forex-news,https://www.forexlive.com/feed/forexorders,https://www.forexlive.com/feed/technicalanalysis,https://www.forexlive.com/feed/news\"&bd=swiss,chf",
+					"raw": "http://localhost/dev/rss-sentiment/rss_sentiment_api?t=t1NP63m4wnBg6nyHYKfmc2TpCOGI4nss&rss_url=\"https://www.myfxbook.com/rss/latest-forex-news,https://www.forexlive.com/feed/forexorders,https://www.forexlive.com/feed/technicalanalysis,https://www.forexlive.com/feed/news,https://www.actionforex.com/category/contributors/fundamental-analysis/feed/,https://www.actionforex.com/category/contributors/technical-analysis/feed/,https://www.actionforex.com/category/live-comments/feed/,https://www.actionforex.com/category/action-insight/market-overview/feed/\"&bd=5&q=nzd,kiwi",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -92,17 +92,22 @@
 						},
 						{
 							"key": "rss_url",
-							"value": "\"https://www.myfxbook.com/rss/latest-forex-news,https://www.forexlive.com/feed/forexorders,https://www.forexlive.com/feed/technicalanalysis,https://www.forexlive.com/feed/news\""
+							"value": "\"https://www.myfxbook.com/rss/latest-forex-news,https://www.forexlive.com/feed/forexorders,https://www.forexlive.com/feed/technicalanalysis,https://www.forexlive.com/feed/news,https://www.actionforex.com/category/contributors/fundamental-analysis/feed/,https://www.actionforex.com/category/contributors/technical-analysis/feed/,https://www.actionforex.com/category/live-comments/feed/,https://www.actionforex.com/category/action-insight/market-overview/feed/\""
 						},
 						{
 							"key": "bd",
-							"value": "swiss,chf",
+							"value": "5",
 							"description": "how old maust be search in the feed\n"
 						},
 						{
 							"key": "return_rss",
-							"value": null,
+							"value": "",
 							"disabled": true
+						},
+						{
+							"key": "q",
+							"value": "nzd,kiwi",
+							"description": "search query"
 						}
 					]
 				}
