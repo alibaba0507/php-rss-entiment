@@ -1,0 +1,113 @@
+{
+	"info": {
+		"_postman_id": "12b6f86b-c99a-459a-83b7-8ba031b538c3",
+		"name": "rss machine learning",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14821056"
+	},
+	"item": [
+		{
+			"name": "google-sheet-read-csv",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/dev/rss-sentiment/google-sheet-read-csv.php?s=https://docs.google.com/spreadsheets/d/17LPNYYvbPDssYkA_etWSIW732PuApTHr4Q4rmZrpSeo/pub?output=csv&col_no=4&strt_indx=1&l=35&min_efficiency=25&min_accuracy=0.65&reverse_read=1&predict=20&ma=50",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"dev",
+						"rss-sentiment",
+						"google-sheet-read-csv.php"
+					],
+					"query": [
+						{
+							"key": "s",
+							"value": "https://docs.google.com/spreadsheets/d/17LPNYYvbPDssYkA_etWSIW732PuApTHr4Q4rmZrpSeo/pub?output=csv"
+						},
+						{
+							"key": "col_no",
+							"value": "4"
+						},
+						{
+							"key": "strt_indx",
+							"value": "1"
+						},
+						{
+							"key": "l",
+							"value": "35"
+						},
+						{
+							"key": "min_efficiency",
+							"value": "25",
+							"description": "this is  grid rows"
+						},
+						{
+							"key": "min_accuracy",
+							"value": "0.65"
+						},
+						{
+							"key": "reverse_read",
+							"value": "1",
+							"description": "add this if need to reverse the array bottom to become top"
+						},
+						{
+							"key": "predict",
+							"value": "20",
+							"description": "number of element to read front of the patern to calulate prediction"
+						},
+						{
+							"key": "ma",
+							"value": "50",
+							"description": "Moving avarage value\n"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "rss_sentiment_api",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/dev/rss-sentiment/rss_sentiment_api?t=t1NP63m4wnBg6nyHYKfmc2TpCOGI4nss&rss_url=\"https://www.myfxbook.com/rss/latest-forex-news,https://www.forexlive.com/feed/forexorders,https://www.forexlive.com/feed/technicalanalysis,https://www.forexlive.com/feed/news\"&bd=swiss,chf",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"dev",
+						"rss-sentiment",
+						"rss_sentiment_api"
+					],
+					"query": [
+						{
+							"key": "t",
+							"value": "t1NP63m4wnBg6nyHYKfmc2TpCOGI4nss",
+							"description": "token to avoid accesing the url without authorizaton"
+						},
+						{
+							"key": "rss_url",
+							"value": "\"https://www.myfxbook.com/rss/latest-forex-news,https://www.forexlive.com/feed/forexorders,https://www.forexlive.com/feed/technicalanalysis,https://www.forexlive.com/feed/news\""
+						},
+						{
+							"key": "bd",
+							"value": "swiss,chf",
+							"description": "how old maust be search in the feed\n"
+						},
+						{
+							"key": "return_rss",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

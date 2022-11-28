@@ -1,6 +1,7 @@
 <?php
 error_reporting(E_ALL ^ E_NOTICE);  
 require_once("ml_model.php");
+require_once("Statistics.php");
 header("Content-Type:application/json");
 // for reading google spreadsheet as csv
 // 1. Publich spreadsheet to the web , and use this linl
@@ -14,6 +15,7 @@ $header = (isset($_GET['header'])? true : false);
 $startIndex = (!isset($_GET['strt_indx']))?"1":trim($_GET["strt_indx"],"\"'");
 $len = (!isset($_GET['l']))?"5":trim($_GET["l"],"\"'");
 $future_len = (!isset($_GET['predict']))?5:trim($_GET["predict"],"\"'");
+$ma = (!isset($_GET['ma']))?21:trim($_GET["ma"],"\"'");
 // if there is no patterns produce one can reduce min_accuracy or min_efficiency 
 // or l (length) of the pattern
 $accuracy = (!isset($_GET['min_accuracy']))?"0.5":trim($_GET["min_accuracy"],"\"'");
@@ -33,16 +35,21 @@ $data = google_sheet_read_csv($url,-1,$header,$reverse_read);
 echo "---------------------- ROWS[".count($data)."] ---------------------\n";
 //print_r($data);
 $a = array_column($data,(int)$col_no);
+$ma_arr = [];
+$stat = new Statistics();
+$stat->moving_average($a,$ma,$ma_arr);
 echo "---------------------- COLS [".count($a)."] ---------------------\n";
-$out = checkPatterns($a,$startIndex,$len,$gridRows,$accuracy);
+$out = checkPatterns($ma_arr,$startIndex,$len,$gridRows,$accuracy);
 echo "---------------------- Finish [".count($out)."]---------------------------\n";
 $tm = [];
 for ($i = 0;$i < count($out);$i++)
 {
     $tm[] = ((string)$data[$out[$i]][0]).":".((string)$data[$out[$i]][1]); 
 }
-print_r($tm);
+
 $pr = patternRange($a,$out,$future_len);
 print_r($pr);
+print_r($tm);
+
 
 ?>
