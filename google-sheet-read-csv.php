@@ -15,6 +15,7 @@ $header = (isset($_GET['header'])? true : false);
 $startIndex = (!isset($_GET['strt_indx']))?"1":trim($_GET["strt_indx"],"\"'");
 $len = (!isset($_GET['l']))?"5":trim($_GET["l"],"\"'");
 $future_len = (!isset($_GET['predict']))?5:trim($_GET["predict"],"\"'");
+//$return_prediction = (!isset($_GET['retunr_predict']) && strlen($_GET['retunr_predict'])> 0)?false:trim($_GET["retunr_predict"],"\"'");
 $ma = (!isset($_GET['ma']))?21:trim($_GET["ma"],"\"'");
 // if there is no patterns produce one can reduce min_accuracy or min_efficiency 
 // or l (length) of the pattern

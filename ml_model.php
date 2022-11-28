@@ -89,6 +89,7 @@ function patternRange($a,$startIndex,$len)
         return ["NA","NA"];
     $top = 0.0;
     $bottom = 0.0;
+    
     for ($i = 0;$i < count($startIndex);$i++)
     {
         $arr = array_slice($a,$startIndex[$i] - ($len-1),$len); // backwards
