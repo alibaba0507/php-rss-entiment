@@ -1,5 +1,35 @@
 <?php
-
+function google_sheet_read_csv($html_link = NULL,$col_no = 0,$hasNames = false,$reverseArray = false){
+    //$spreadsheet_url = @file_get_contents($html_link);
+    //$csv = file_get_contents($spreadsheet_url);
+    if (($csv = @file_get_contents($html_link)) === false) {
+        $error = error_get_last();
+        echo "HTTP request failed. Error was: " . $error['message'];
+    } else {
+            echo "Everything went better than expected";
+    }
+    $rows = explode("\n",$csv);
+    $data = array();
+    $names = array();
+    for($i=0; $i<count($rows); $i++) {
+        if($i==0 && $hasNames == true){
+        $names = str_getcsv($rows[$i]);
+        }else if ($col_no != -1){
+            $tmp = str_getcsv($rows[$i]);
+            $data[] = $tmp[(int)$col_no];
+            //echo "--------------------- [".$rows[$i][$col_no]."]----------------\n";
+        }else{
+         $data[] = str_getcsv($rows[$i]);
+        }
+    }
+    //print_r($data);
+    if ($reverseArray == true)
+    {    
+        $data = array_reverse($data);
+        
+    }
+    return $data;
+}
 function google_sheet_to_csv($html_link = NULL){
     //$local_html = "sheets.html";
     $file_contents = file_get_contents($html_link);
@@ -53,10 +83,10 @@ function google_sheet_to_csv($html_link = NULL){
 }
 function patternRange($a,$startIndex,$len)
 {
-    if (!is_array($a))
-     return -1;
-    if (!is_array($startIndex))
-        return -1;
+    if (!is_array($a) || count($a) == 0)
+     return ["NA","NA"];
+    if (!is_array($startIndex) || count($startIndex) == 0)
+        return ["NA","NA"];
     $top = 0.0;
     $bottom = 0.0;
     for ($i = 0;$i < count($startIndex);$i++)
@@ -111,17 +141,20 @@ function checkPatterns($a,$patternStart,$len,$gridRows,$minMatch = 0.6)
  */
  function createPattern($a,$start,$len,$rows)
  {
-    if (!is_array($a))
-     return -1;
+    $out = [];
+    if (!is_array($a)|| count($a)==0)
+     return $out;
+    
    $arr = array_slice($a,$start,$len);
-   //echo "-------------------- Slice stsrt[" .$start . "] len[" . $len ."]\n<br/>";
-   //print_r($arr);
+   //echo "-------------------- Slice stsrt[" .$start . "] len[" . $len ."][".count($arr)."]\n<br/>";
+   //print_r($a);
     $max = max($arr);
     $min = min($arr);
     $d_col = ($max-$min)/(int)$rows;
-    //echo "-------------- max[".$max."]min[".$min."] rows[".$rows."][".count($arr)."]-------\n<br/>";
+    
     $d_row = count($arr)/(int)$rows;
-    $out = [];
+    //echo "-------------- max[".$max."]min[".$min."] rows[".$rows."] d_row[".$d_row."] d_col[".$d_col."]-------\n<br/>";
+    
     for ($i = 0;$i < count($arr);$i++)
     {
       $col = ($max - $arr[$i])/(float)$d_col;

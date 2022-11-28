@@ -25,6 +25,9 @@ if (!isset($_GET['s']) )
 }
 
 $url = trim($_GET["s"],"\"'");
+google_sheet_read_csv($url);
+echo "--------------- finish reading csv --------------\n";
+return;
 $table = google_sheet_to_csv($url);
 //echo json_encode($table);
 $data = $table[$tbl_no];
