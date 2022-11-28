@@ -6,6 +6,7 @@ header("Content-Type:application/json");
 $JWT_SECRET_KEY = 't1NP63m4wnBg6nyHYKfmc2TpCOGI4nss';
 $arr_err = array("errCode" => 400,"errMsg" =>"Invalid Request");
 $res = array("rss" => "","newer_then" => "0","query" => "","sentiment" => "");
+
 if (!isset($_GET['t']) || (trim($_GET['t'],'\'"')!=$JWT_SECRET_KEY))
 {
 	$arr_err["errMsg"] = "Missing Token";
