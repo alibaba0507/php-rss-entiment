@@ -1,5 +1,6 @@
 <?php
 error_reporting(E_ALL ^ E_NOTICE);  
+require 'vendor/autoload.php';
 require_once("ml_model.php");
 require_once("Statistics.php");
 header("Content-Type:application/json");
@@ -33,24 +34,82 @@ if (!isset($_GET['s']) )
 
 $url = trim($_GET["s"],"\"'");
 $data = google_sheet_read_csv($url,-1,$header,$reverse_read);
-echo "---------------------- ROWS[".count($data)."] ---------------------\n";
+if ($data && $data["err"])
+{
+    echo json_encode($data);
+    return;
+}
+$j_out = [];
+$j_out["data"] = count($data);
+//echo "---------------------- ROWS[".count($data)."] ---------------------\n";
 //print_r($data);
 $a = array_column($data,(int)$col_no);
 $ma_arr = [];
 $stat = new Statistics();
 $stat->moving_average($a,$ma,$ma_arr);
-echo "---------------------- COLS [".count($a)."] ---------------------\n";
+//echo "---------------------- COLS [".count($a)."] ---------------------\n";
 $out = checkPatterns($ma_arr,$startIndex,$len,$gridRows,$accuracy);
-echo "---------------------- Finish [".count($out)."]---------------------------\n";
+//echo "---------------------- Finish [".count($out)."]---------------------------\n";
+$j_out["patterns"] = count($out);
 $tm = [];
+$lbl = "labels:[";
+$chart_data = [];
 for ($i = 0;$i < count($out);$i++)
 {
-    $tm[] = ((string)$data[$out[$i]][0]).":".((string)$data[$out[$i]][1]); 
+    $tm[] = ((string)$data[$out[$i]][0])." ".((string)$data[$out[$i]][1]); 
+    
+    $dt = "data: [";
+    for ($j = 0;$j < (int)$len;$j++)
+    {
+      if ($i == 0)
+      $lbl .= "'".$j."',";
+      $dt .= $a[$out[$i]+$j].",";
+    }
+    $dt .= "]";
+   // echo $dt ."\n";
+    $chart_data[]= $dt;
+} 
+//echo $lbl ."]\n";
+$ch_dt = "data:{".$lbl."],datasets:[";
+for ($i = 0 ;$i < count($chart_data);$i++)
+{
+  $ch_dt .= "{".$chart_data[$i]."},";
 }
-
+$ch_dt .= "]}";
+$chart = new QuickChart(array(
+    'width' => 700,
+    'height' => 600
+  ));
+ // echo "---------- [".$ch_dt."]-------\n";
+  /*$chart->setConfig('{
+    type: "bar",
+    data: {
+      labels: ["Hello world", "Test"],
+      datasets: [{
+        label: "Foo",
+        data: [1, 2]
+      }]
+    }
+  }');
+  */
+  $chart->setConfig('{
+    type: "line",'.$ch_dt.',options: {
+        legend: {
+           display: false
+        },scales: {
+            ticks: {
+                 stepSize: 0.0001
+             }
+         }}}');
+  //echo '{type: "line",'.$ch_dt.'}\n';
+  //echo $chart->getUrl();
+  $j_out["graph"] = $chart->getUrl();
 $pr = patternRange($a,$out,$future_len);
-print_r($pr);
-print_r($tm);
+$j_out["occurance"] = $tm;
+$j_out["predicted_range"] = $pr;
+echo json_encode($j_out);
+//print_r($pr);
+//print_r($tm);
 
 
 ?>

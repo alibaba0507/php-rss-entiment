@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "720dbf2b203b5255309f0939b267f179",
+    "content-hash": "8bdb59d951b645f479624244cb7fd432",
     "packages": [
         {
             "name": "davmixcool/php-sentiment-analyzer",
@@ -56,6 +56,55 @@
                 "source": "https://github.com/davmixcool/php-sentiment-analyzer/tree/1.2.2"
             },
             "time": "2020-09-17T13:50:06+00:00"
+        },
+        {
+            "name": "ianw/quickchart",
+            "version": "v1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/typpo/quickchart-php.git",
+                "reference": "3e009cbfc7ad61c53d4ef1b0f50093ce6e44fdea"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/typpo/quickchart-php/zipball/3e009cbfc7ad61c53d4ef1b0f50093ce6e44fdea",
+                "reference": "3e009cbfc7ad61c53d4ef1b0f50093ce6e44fdea",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ian Webster",
+                    "homepage": "https://quickchart.io/"
+                }
+            ],
+            "description": "QuickChart chart API",
+            "homepage": "http://github.com/typpo/quickchart-php",
+            "keywords": [
+                "bar-chart",
+                "chart",
+                "chart-api",
+                "charts",
+                "image",
+                "line-chart"
+            ],
+            "support": {
+                "issues": "https://github.com/typpo/quickchart-php/issues",
+                "source": "https://github.com/typpo/quickchart-php/tree/v1.2.1"
+            },
+            "time": "2022-08-11T14:54:21+00:00"
         },
         {
             "name": "tobscure/json-api",
