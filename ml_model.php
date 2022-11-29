@@ -115,12 +115,17 @@ function checkPatterns($a,$patternStart,$len,$gridRows,$minMatch = 0.6)
    for ($i = $patternStart + $len;$i < count($a)-$len;$i++)
    {
       $comparePattern = createPattern($a,$i,$len,$gridRows);
-      $diff = array_diff_assoc($model,$comparePattern);
+      $diff = array_diff_assoc($model['grid'],$comparePattern['grid']);
+      //echo "------ Min[".((string)$comparePattern['min'])."] max[".((string)$comparePattern['max'])."]----\n";
       if (count($diff) <= 0) {
          // 100% match
          $foundAt[] = $i;
          $i += $len;
-      }else if (count($diff) > 0 && (1 - ((float)count($diff)/(float)count($model))) >= $minMatch)
+      }else if (count($diff) > 0 && (1 - ((float)count($diff)/(float)count($model['grid']))) >= $minMatch
+            && $model['grid'][0] == $comparePattern['grid'][0] 
+            && $model['grid'][count($model['grid'])-1] == $comparePattern['grid'][count($comparePattern['grid'])-1]
+            && $model['min'] == $comparePattern['min']
+            && $model['max'] == $comparePattern['max'])
       {
          $foundAt[] = $i;
          $i += $len;
@@ -155,15 +160,24 @@ function checkPatterns($a,$patternStart,$len,$gridRows,$minMatch = 0.6)
     
     $d_row = count($arr)/(int)$rows;
     //echo "-------------- max[".$max."]min[".$min."] rows[".$rows."] d_row[".$d_row."] d_col[".$d_col."]-------\n<br/>";
-    
+    $maxIndx = -1;
+    $minIndx = -1;
     for ($i = 0;$i < count($arr);$i++)
     {
       $col = ($max - $arr[$i])/(float)$d_col;
       $col = ($col == 0.0)?0.1:$col;
       $r = ceil(($i+1)/(float)$d_row);
       $out[$i] = ((ceil($col) - 1)*$rows)+$r;
+      if ($arr[$i] == $max)
+       $maxIndx = $out[$i];
+      if ($arr[$i] == $min)
+       $minIndx = $out[$i];
     }
-    return $out;
+    $ret = [];
+    $ret['min'] = $minIndx;
+    $ret['max'] = $maxIndx;
+    $ret['grid'] = $out;
+    return $ret;
  }
   
 ?>
