@@ -51,6 +51,30 @@ $stat->moving_average($a,$ma,$ma_arr);
 $out = checkPatterns($ma_arr,$startIndex,$len,$gridRows,$accuracy);
 //echo "---------------------- Finish [".count($out)."]---------------------------\n";
 $j_out["patterns"] = count($out);
+$lbl_org = "labels:[";
+$dt_org = "data: [";
+for ($i = $startIndex;$i < $startIndex + $len;$i++)
+{
+    $lbl_org .= "'".$i."',";
+    $dt_org .= $a[$i].",";
+}
+$dt_org .= "]";
+$ch_dt_org = "data:{".$lbl_org."],datasets:[";
+$ch_dt_org .= "{". $dt_org ."}]}";   
+$chart_org = new QuickChart(array(
+    'width' => 700,
+    'height' => 600
+  ));
+$chart_org->setConfig('{
+    type: "line",'.$ch_dt_org.',options: {
+        legend: {
+           display: false
+        },scales: {
+            ticks: {
+                 stepSize: 0.0001
+             }
+         }}}');
+$j_out["graph_org"] = $chart_org->getUrl();
 $tm = [];
 $lbl = "labels:[";
 $chart_data = [];
