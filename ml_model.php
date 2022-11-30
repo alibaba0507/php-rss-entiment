@@ -118,6 +118,37 @@ function patternRange($a,$startIndex,$len)
     $ret = [$top,$bottom];
     return $ret;
 }
+
+function checkGridPatterns($a,$patternStart,$len,$gridRows,$minMatch = 0.6)
+{
+    $model_grid = createModelGrid($a,$patternStart,$len,$gridRows);
+    $foundAt = [];
+    for ($j = $patternStart + $len;$j < count($a)-$len;$j++)
+   {
+        $arr = array_slice($a,$j,$len);
+        $max = max($arr);
+        $min = min($arr);
+        $d_col = ($max-$min)/(int)$gridRows;
+        
+        $d_row = count($arr)/(int)$gridRows;
+        $accuracy = 0.0;
+        for ($i = 0;$i < count($arr);$i++)
+        {
+            $col = ($max - $arr[$i])/(float)$d_col;
+            $col = ($col == 0.0)?0.1:$col;
+            $r = ceil(($i+1)/(float)$d_row);
+            $cell = (((ceil($col) - 1)*$gridRows)+$r);
+            $accuracy += $model_grid[$cell];
+        }
+        $accuracy /= count($arr);
+        if ($accuracy >= $minMatch)
+        {
+            $foundAt[] = $i;
+            $i += $len;
+        }
+   }// end for
+   return $foundAt;
+}
 /*
  * Look for a model and search entire array ($a)
  * to match this model and if found will save 

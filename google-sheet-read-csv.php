@@ -49,7 +49,7 @@ $stat = new Statistics();
 $stat->moving_average($a,$ma,$ma_arr);
 //echo "---------------------- COLS [".count($a)."] ---------------------\n";
 $model_grid = createModelGrid($ma_arr,$startIndex,$len,$gridRows);//createPattern($ma_arr,$startIndex,$len,$gridRows);
-print_r($model_grid);
+//print_r($model_grid);
 $out = checkPatterns($ma_arr,$startIndex,$len,$gridRows,$accuracy);
 //echo "---------------------- Finish [".count($out)."]---------------------------\n";
 $j_out["patterns"] = count($out);
