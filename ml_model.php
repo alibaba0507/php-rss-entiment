@@ -158,6 +158,38 @@ function checkPatterns($a,$patternStart,$len,$gridRows,$minMatch = 0.6)
    }// end for
    return $foundAt;
 }
+
+function createModelGrid($a,$start,$len,$rows)
+{
+    $grid = array_fill(0,((int)$rows*(int)$rows),0);
+    if (!is_array($a)|| count($a)==0)
+     return $grid;
+    
+    $arr = array_slice($a,$start,$len);
+    $max = max($arr);
+    $min = min($arr);
+    $d_col = ($max-$min)/(int)$rows;
+    $d_row = count($arr)/(int)$rows;
+    for ($i = 0;$i < count($arr);$i++)
+    {
+      $col = ($max - $arr[$i])/(float)$d_col;
+      $col = ($col == 0.0)?0.1:$col;
+      $r = ceil(($i+1)/(float)$d_row);
+      $cell = (((ceil($col) - 1)*$rows)+$r);
+      $column = $cell % $rows;
+      $row = floor($cell / $rows);
+      $grid[$cell] = 1;
+      if ($column > 1)
+        $grid[$cell - 1] = 0.5;
+      if ($column < $rows - 1)
+        $gridp[$cell + 1] = 0.5;
+      if ($row > 0)
+        $gridp[$cell - $rows] = 0.5;
+      if ($row < $rows - 1)
+        $gridp[$cell + $rows] = 0.5;
+      
+    }
+}
  /*
  * Convert array values into grid values
  * by creating the grid based on min , max array values
@@ -173,6 +205,7 @@ function checkPatterns($a,$patternStart,$len,$gridRows,$minMatch = 0.6)
  function createPattern($a,$start,$len,$rows)
  {
     $out = [];
+    $grid = array_fill(0,((int)$rows*(int)$rows),0);
     if (!is_array($a)|| count($a)==0)
      return $out;
     
@@ -193,6 +226,9 @@ function checkPatterns($a,$patternStart,$len,$gridRows,$minMatch = 0.6)
       $col = ($col == 0.0)?0.1:$col;
       $r = ceil(($i+1)/(float)$d_row);
       $out[$i] = ((ceil($col) - 1)*$rows)+$r;
+      
+      $grid[(((ceil($col) - 1)*$rows)+$r)] = 1;
+
       if ($arr[$i] == $max)
        $maxIndx = $out[$i];
       if ($arr[$i] == $min)
@@ -202,6 +238,7 @@ function checkPatterns($a,$patternStart,$len,$gridRows,$minMatch = 0.6)
     $ret['min'] = $minIndx;
     $ret['max'] = $maxIndx;
     $ret['grid'] = $out;
+    $ret['pattern'] = $grid;
     return $ret;
  }
   
