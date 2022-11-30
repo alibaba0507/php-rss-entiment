@@ -12,7 +12,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost/dev/rss-sentiment/google-sheet-read-csv.php?s=https://docs.google.com/spreadsheets/d/17LPNYYvbPDssYkA_etWSIW732PuApTHr4Q4rmZrpSeo/pub?output=csv&col_no=4&strt_indx=90&l=35&min_efficiency=20&min_accuracy=0.35&reverse_read=1&predict=20&ma=5",
+					"raw": "http://localhost/dev/rss-sentiment/google-sheet-read-csv.php?s=https://docs.google.com/spreadsheets/d/17LPNYYvbPDssYkA_etWSIW732PuApTHr4Q4rmZrpSeo/pub?output=csv&col_no=4&strt_indx=35&l=65&min_efficiency=20&min_accuracy=0.35&reverse_read=1&predict=20&ma=21",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -33,11 +33,11 @@
 						},
 						{
 							"key": "strt_indx",
-							"value": "90"
+							"value": "35"
 						},
 						{
 							"key": "l",
-							"value": "35"
+							"value": "65"
 						},
 						{
 							"key": "min_efficiency",
@@ -60,7 +60,7 @@
 						},
 						{
 							"key": "ma",
-							"value": "5",
+							"value": "21",
 							"description": "Moving avarage value\n"
 						}
 					]
@@ -74,7 +74,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost/dev/rss-sentiment/rss_sentiment_api?t=t1NP63m4wnBg6nyHYKfmc2TpCOGI4nss&rss_url=\"https://www.myfxbook.com/rss/latest-forex-news,https://www.forexlive.com/feed/forexorders,https://www.forexlive.com/feed/technicalanalysis,https://www.forexlive.com/feed/news,https://www.actionforex.com/category/contributors/fundamental-analysis/feed/,https://www.actionforex.com/category/contributors/technical-analysis/feed/,https://www.actionforex.com/category/live-comments/feed/,https://www.actionforex.com/category/action-insight/market-overview/feed/\"&bd=5&q=usd",
+					"raw": "http://localhost/dev/rss-sentiment/rss_sentiment_api?t=t1NP63m4wnBg6nyHYKfmc2TpCOGI4nss&rss_url=\"https://www.myfxbook.com/rss/latest-forex-news,https://www.forexlive.com/feed/forexorders,https://www.forexlive.com/feed/technicalanalysis,https://www.forexlive.com/feed/news,https://www.actionforex.com/category/contributors/fundamental-analysis/feed/,https://www.actionforex.com/category/contributors/technical-analysis/feed/,https://www.actionforex.com/category/live-comments/feed/,https://www.actionforex.com/category/action-insight/market-overview/feed/\"&bd=5&q=gbp",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -106,7 +106,7 @@
 						},
 						{
 							"key": "q",
-							"value": "usd",
+							"value": "gbp",
 							"description": "search query"
 						}
 					]
