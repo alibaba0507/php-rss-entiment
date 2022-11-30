@@ -181,14 +181,15 @@ function createModelGrid($a,$start,$len,$rows)
       $grid[$cell] = 1;
       if ($column > 1)
         $grid[$cell - 1] = 0.5;
-      if ($column < $rows - 1)
+      if ($column < ($rows - 1))
         $gridp[$cell + 1] = 0.5;
-      if ($row > 0)
+      /*if ($row > 0)
         $gridp[$cell - $rows] = 0.5;
       if ($row < $rows - 1)
         $gridp[$cell + $rows] = 0.5;
-      
+      */
     }
+    return $grid;
 }
  /*
  * Convert array values into grid values
