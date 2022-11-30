@@ -129,8 +129,14 @@ $chart = new QuickChart(array(
   //echo $chart->getUrl();
   $j_out["graph"] = $chart->getUrl();
 $pr = patternRange($a,$out,$future_len);
-$j_out["occurance"] = $tm;
+if ($startIndex - $future_len >= 0)
+{
+  $real_range = realRenage($a,$startIndex,$future_len);
+  $j_out["real_range"] = $real_range;
+}
+$pr = patternRange($a,$out,$future_len);     
 $j_out["predicted_range"] = $pr;
+$j_out["occurance"] = $tm;
 echo json_encode($j_out);
 //print_r($pr);
 //print_r($tm);

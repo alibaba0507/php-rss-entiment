@@ -82,6 +82,20 @@ function google_sheet_to_csv($html_link = NULL){
     //file_put_contents("result.csv",$csv);
     return $tables_csv;//$csv;
 }
+
+function realRenage($a,$startIndex,$len){
+    if (!is_array($a) || count($a) == 0)
+        return ["NA","NA"];
+    $top = 0.0;
+    $bottom = 0.0;
+   $arr = array_slice($a,$startIndex - ($len-1),$len);
+   $max = max($arr);
+    $min = min($arr);
+    $top += (trim($max," \"'") - trim($a[$startIndex]," \"'"));
+    $bottom += (trim($a[$startIndex]," \"'") - trim($min," \"'") );
+    $ret = [$top,$bottom];
+    return $ret;
+}
 function patternRange($a,$startIndex,$len)
 {
     if (!is_array($a) || count($a) == 0)
