@@ -204,19 +204,23 @@ function createModelGrid($a,$start,$len,$rows)
       if ($column > 1 && $row > 0 && ($grid[($cell - $rows) - 1] != 1 && $grid[($cell - $rows) - 1] != 0.5))
       {
         $grid[($cell - $rows) - 1] = 0.25;
+       // echo "--- TOP LEFT[".$row."] [".$cell."][".(($cell - $rows) - 1)."]-----\n";
       }
       if ($column < ($rows - 1) && $row > 0 && ($grid[($cell - $rows) + 1] != 1 && $grid[($cell - $rows) + 1] != 0.5 ))
       {
         $grid[($cell - $rows) + 1] = 0.25;
+       // echo "--- TOP RIGHT[".$row."] [".$cell."][".(($cell - $rows) + 1)."]-----\n";
       }
       //---------------
       if ($column > 1 && $row < ($rows - 1) && ($grid[($cell + $rows) - 1] != 1 && $grid[($cell + $rows) - 1] != 0.5))
       {
         $grid[($cell + $rows) - 1] = 0.25;
+       // echo "--- BOTTOM LEFT[".$row."] [".$cell."][".(($cell + $rows) - 1)."]-----\n";
       }
       if ($column < ($rows - 1) && $row < ($rows - 1) && ($grid[($cell + $rows) + 1] != 1 && $grid[($cell + $rows) + 1] != 0.5))
       {
         $grid[($cell + $rows) + 1] = 0.25;
+      //  echo "--- BOTTOM RIGHT[".$row."] [".$cell."][".(($cell + $rows) + 1)."]-----\n";
       }
     }
     return $grid;
