@@ -49,8 +49,10 @@ $stat = new Statistics();
 $stat->moving_average($a,$ma,$ma_arr);
 //echo "---------------------- COLS [".count($a)."] ---------------------\n";
 $model_grid = createModelGrid($ma_arr,$startIndex,$len,$gridRows);//createPattern($ma_arr,$startIndex,$len,$gridRows);
+//printGrid($model_grid,$gridRows,"Model Grid");
 //print_r($model_grid);
-$out = checkPatterns($ma_arr,$startIndex,$len,$gridRows,$accuracy);
+//$out = checkPatterns($ma_arr,$startIndex,$len,$gridRows,$accuracy);
+$out = checkGridPatterns($ma_arr,$startIndex,$len,$gridRows,$accuracy);
 //echo "---------------------- Finish [".count($out)."]---------------------------\n";
 $j_out["patterns"] = count($out);
 $lbl_org = "labels:[";
@@ -80,12 +82,12 @@ $j_out["graph_org"] = $chart_org->getUrl();
 $tm = [];
 $lbl = "labels:[";
 $chart_data = [];
-for ($i = 0;$i < count($out);$i++)
+for ($i = 0;$i < count($out) ;$i++)
 {
     $tm[] = ((string)$data[$out[$i]][0])." ".((string)$data[$out[$i]][1]); 
     
     $dt = "data: [";
-    for ($j = 0;$j < (int)$len;$j++)
+    for ($j = 0;$j < (int)$len && $i < 4;$j++)
     {
       if ($i == 0)
       $lbl .= "'".$j."',";
@@ -93,6 +95,7 @@ for ($i = 0;$i < count($out);$i++)
     }
     $dt .= "]";
    // echo $dt ."\n";
+   if ($i < 4)
     $chart_data[]= $dt;
 } 
 //echo $lbl ."]\n";
@@ -118,7 +121,7 @@ $chart = new QuickChart(array(
     }
   }');
   */
-  $chart->setConfig('{
+  $chart_settings = '{
     type: "line",'.$ch_dt.',options: {
         legend: {
            display: false
@@ -126,7 +129,13 @@ $chart = new QuickChart(array(
             ticks: {
                  stepSize: 0.0001
              }
-         }}}');
+         }}}';
+/*
+echo "\n----------------------\n";
+echo $chart_settings;
+echo "\n----------------------\n";
+*/
+  $chart->setConfig($chart_settings);
   //echo '{type: "line",'.$ch_dt.'}\n';
   //echo $chart->getUrl();
   $j_out["graph"] = $chart->getUrl();

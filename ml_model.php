@@ -118,11 +118,28 @@ function patternRange($a,$startIndex,$len)
     $ret = [$top,$bottom];
     return $ret;
 }
+function printGrid($grid,$gridRows,$grdName = "")
+{
+    $s = "";
+    echo "----------------[".$grdName ."]----------------------\n";
+    for ($i = 0;$i<count($grid);$i++)
+    {
+        $s .= $grid[$i]."  ,  ";
+        if ( (($i+1) % $gridRows) == 0)
+        {
+            $s.= "<br\>\n";
+            echo $s;         
+            $s = "";
+        }
+    }
 
+    echo "--------------------------------------\n";
+}
 function checkGridPatterns($a,$patternStart,$len,$gridRows,$minMatch = 0.6)
 {
     $model_grid = createModelGrid($a,$patternStart,$len,$gridRows);
     $foundAt = [];
+    $grdCnt = 0;
     for ($j = $patternStart + $len;$j < count($a)-$len;$j++)
    {
         $arr = array_slice($a,$j,$len);
@@ -143,8 +160,15 @@ function checkGridPatterns($a,$patternStart,$len,$gridRows,$minMatch = 0.6)
         $accuracy /= count($arr);
         if ($accuracy >= $minMatch)
         {
-            $foundAt[] = $i;
-            $i += $len;
+           /* if ($grdCnt < 1)
+            {
+                $grd = createModelGrid($a,$j,$len,$gridRows);
+                printGrid($grd,$gridRows,"Compare[".$accuracy."]accuracy Grid");
+                $grdCnt++;
+            }
+            */
+            $foundAt[] = $j;
+            $j += $len;
         }
    }// end for
    return $foundAt;
@@ -213,13 +237,13 @@ function createModelGrid($a,$start,$len,$rows)
       if ($column > 1 && $grid[($cell - 1)] != 1)
       {
 
-        $grid[($cell - 1)] = 0.5;
+        $grid[($cell - 1)] = 0.25;
        // echo "--- DWON COL[".$column."] [".$cell."][".($cell - 1)."]-----\n";
       }
       if ($column < ($rows - 1) && $grid[($cell + 1)] != 1)
       {
 
-        $grid[($cell + 1)] = 0.5;
+        $grid[($cell + 1)] = 0.25;
       //  echo "--- UP COL[".$column."] [".$cell."][".($cell + 1)."]-----\n";
       }
       if ($row > 0 &&  $grid[($cell - $rows)] != 1)
@@ -232,7 +256,7 @@ function createModelGrid($a,$start,$len,$rows)
         $grid[($cell + $rows)] = 0.5;
         //echo "--- BOTTOM COL[".$row."] [".$cell."][".($cell + $rows)."]-----\n";
       }
-      if ($column > 1 && $row > 0 && ($grid[($cell - $rows) - 1] != 1 && $grid[($cell - $rows) - 1] != 0.5))
+      /*if ($column > 1 && $row > 0 && ($grid[($cell - $rows) - 1] != 1 && $grid[($cell - $rows) - 1] != 0.5))
       {
         $grid[($cell - $rows) - 1] = 0.25;
        // echo "--- TOP LEFT[".$row."] [".$cell."][".(($cell - $rows) - 1)."]-----\n";
@@ -253,6 +277,7 @@ function createModelGrid($a,$start,$len,$rows)
         $grid[($cell + $rows) + 1] = 0.25;
       //  echo "--- BOTTOM RIGHT[".$row."] [".$cell."][".(($cell + $rows) + 1)."]-----\n";
       }
+      */
     }
     return $grid;
 }
