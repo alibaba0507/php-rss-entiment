@@ -37,6 +37,8 @@ if ($data && $data["err"])
     return;
 }
 $a = array_column($data,(int)$col_no);
+$j_out = [];
+$j_out["data_row"] = count($data);
 //------------------------------ collecting data and extract column from spreadsheet as array --------------------------
 $ma_arr = [];
 $stat = new Statistics();
@@ -44,6 +46,21 @@ $stat->moving_average($a,$ma,$ma_arr);
 //------------------------ Create array of Moving avarages values based on selected column from spreadsheet -----------
 $model_grid = createModelGrid($ma_arr,$startIndex,$len,$gridRows);//create our grid model of the pattern
 $out = checkGridPatterns($ma_arr,$startIndex,$len,$gridRows,$accuracy); // find all occurance of the grid patterns
+$j_out["patterns"] = count($out);
+$tm = [];
+for ($i = 0;$i < count($out) ;$i++)
+{
+    $tm[] = ((string)$data[$out[$i]][0])." ".((string)$data[$out[$i]][1]); 
+}
+$pr = patternRange($a,$out,$future_len);
+if ($startIndex - $future_len >= 0)
+{
+  $real_range = realRenage($a,$startIndex,$future_len);
+  $j_out["real_range"] = $real_range;
+}
+$pr = patternRange($a,$out,$future_len);     
+$j_out["predicted_range"] = $pr;
+$j_out["occurance"] = $tm;
 $pattern_data = array_slice($a,$startIndex,$len);
 $chart_data = [];
 for ($i = 0;$i < count($out) ;$i++)
@@ -54,7 +71,8 @@ for ($i = 0;$i < count($out) ;$i++)
 $chart_data[] = $pattern_data;
 //echo "--------------------[".count($chart_data)."]------------------------\n";
 //echo 
-$ret = drawChart($chart_data/*$pattern_data*/,550,850,20,true);
-echo json_encode( $ret);
+$ret = drawChart($chart_data/*$pattern_data*/,550,850,20);
+$j_out["graph"] = $ret;
+echo json_encode( $j_out);
 //echo "-------------------------------------------\n";
 ?>
