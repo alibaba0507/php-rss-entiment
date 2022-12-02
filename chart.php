@@ -119,7 +119,7 @@ function drawChart($data,$img_width = 850,$img_height = 650,$margins = 20,$print
         imagepng( $img );
         $imageData = ob_get_contents();
         ob_clean(); 
-        return json_encode(base64_encode($imageData));
+        return (base64_encode($imageData));
     }
     
 }

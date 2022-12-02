@@ -55,6 +55,6 @@ $chart_data[] = $pattern_data;
 //echo "--------------------[".count($chart_data)."]------------------------\n";
 //echo 
 $ret = drawChart($chart_data/*$pattern_data*/,550,850,20,true);
-echo $ret;
+echo json_encode( $ret);
 //echo "-------------------------------------------\n";
 ?>
