@@ -75,7 +75,7 @@ for ($i = 0;$i < count($out) ;$i++)
     //$j_out["linear_reg"][] = ["m" => $lr->getGradient(),"c" => $lr->getIntercept()];
     $chart_data[] = array_reverse($arr);
     $predict = array_slice($a,$out[$i]-$future_len,$future_len);
-    $lr = new linear_regression( $predict );
+    $lr = new linear_regression( array_reverse($predict) );
     $slope += $lr->getGradient();
     //$j_out["linear_reg_predict"][] = ["m" => $lr->getGradient(),"c" => $lr->getIntercept()];
     $chart_predict_data[] = array_reverse($predict);
