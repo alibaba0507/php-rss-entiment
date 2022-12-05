@@ -80,7 +80,7 @@ for ($i = 0;$i < count($out) ;$i++)
     //$j_out["linear_reg_predict"][] = ["m" => $lr->getGradient(),"c" => $lr->getIntercept()];
     $chart_predict_data[] = array_reverse($predict);
 }
-$j_out["linear_slope"] = (count($out) > 0) ? $slope/count($out): "NA";
+$j_out["linear_slope"] = (count($out) > 0) ? round($slope/count($out),4): "NA";
 $chart_data[] = array_reverse($pattern_data);
 if ($startIndex > $future_len)
 {
