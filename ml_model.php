@@ -91,8 +91,8 @@ function realRenage($a,$startIndex,$len){
    $arr = array_slice($a,$startIndex - ($len-1),$len);
    $max = max($arr);
     $min = min($arr);
-    $top += (trim($max," \"'") - trim($a[$startIndex]," \"'"));
-    $bottom += (trim($a[$startIndex]," \"'") - trim($min," \"'") );
+    $top += (trim($max," \"'") - trim($a[$startIndex  +1]," \"'"));
+    $bottom += (trim($a[$startIndex + 1]," \"'") - trim($min," \"'") );
     $ret = [$top,$bottom];
     return $ret;
 }
@@ -107,11 +107,11 @@ function patternRange($a,$startIndex,$len)
     
     for ($i = 0;$i < count($startIndex);$i++)
     {
-        $arr = array_slice($a,$startIndex[$i] - ($len-1),$len); // backwards
+        $arr = array_slice($a,$startIndex[$i+1] - ($len-1),$len); // backwards
         $max = max($arr);
         $min = min($arr);
         $top += (trim($max," \"'") - trim($a[$startIndex[$i]]," \"'"));
-        $bottom += (trim($a[$startIndex[$i]]," \"'") - trim($min," \"'") );
+        $bottom += (trim($a[$startIndex[$i+1]]," \"'") - trim($min," \"'") );
     }
     $top /= count($startIndex);
     $bottom /= count($startIndex);
@@ -135,12 +135,14 @@ function printGrid($grid,$gridRows,$grdName = "")
 
     echo "--------------------------------------\n";
 }
-function checkGridPatterns($a,$patternStart,$len,$gridRows,$minMatch = 0.6)
+
+function checkGridPatterns($a,$patternStart,$len,$gridRows,$minMatch = 0.6,$predicted_len = 0)
 {
     $model_grid = createModelGrid($a,$patternStart,$len,$gridRows);
     $foundAt = [];
     $grdCnt = 0;
-    for ($j = $patternStart + $len;$j < count($a)-$len;$j++)
+    $predicted_len = ($patternStart + $len < $predicted_len)?$predicted_len - ($patternStart + $len):0;
+    for ($j = $patternStart + $len + $predicted_len;$j < count($a)-$len;$j++)
    {
         $arr = array_slice($a,$j,$len);
         $max = max($arr);

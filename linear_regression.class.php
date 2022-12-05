@@ -25,9 +25,10 @@ class linear_regression {
         $this->y_values_sum = 0;
 
         //Calculate the X and Y value sums
+        $cnt = 0;
         foreach( $this->dataset as $index => $point ){
-            $this->x_values_sum += $point[ 0 ];
-            $this->y_values_sum += $point[ 1 ];
+            $this->x_values_sum += is_array($point)? $point[ 0 ]:+$cnt;
+            $this->y_values_sum += is_array($point) ? $point[ 1 ]:$point;
 
         }
 
@@ -43,11 +44,11 @@ class linear_regression {
         //Start the total sum of squares for the x and y values
         $this->x_sum_of_squares = 0;
         $this->y_sum_of_squares = 0;
-
+        $cnt = 0;
         foreach( $this->dataset as $index => $point ){
             //Calculate the X and Y value first moment deviation scores
-            $x_first_moment = $point[ 0 ] - $this->x_mean;
-            $y_first_moment = $point[ 1 ] - $this->y_mean;
+            $x_first_moment = (is_array($point)?$point[ 0 ]:++$cnt) - $this->x_mean;
+            $y_first_moment = (is_array($point)?$point[ 1 ]:$point) - $this->y_mean;
 
             //Increase the xy first moment score; sum (x first moment) * (y first moment)
             //This is the value on the top of the Rxy formula fraction
@@ -316,7 +317,7 @@ class linear_regression {
     [5,79],
     [6,83]
 ];*/
-
+/*
 for( $i = 1; $i <= 5; $i++ ){
     $dataset[] = [
         $i,
@@ -336,3 +337,5 @@ $lr = new linear_regression( $dataset );
 Elapsed: <?= $lr->elapsed ?>s<br/><hr/>
 
 <?php var_dump( $lr )?>
+*/
+?>

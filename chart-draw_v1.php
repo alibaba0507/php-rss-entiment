@@ -4,6 +4,7 @@ require 'vendor/autoload.php';
 require_once("ml_model.php");
 require_once("Statistics.php");
 require_once("chart.php");
+require_once("linear_regression.class.php");
 //header("Content-Type:application/json");
 // for reading google spreadsheet as csv
 // 1. Publich spreadsheet to the web , and use this linl
@@ -45,7 +46,7 @@ $stat = new Statistics();
 $stat->moving_average($a,$ma,$ma_arr);
 //------------------------ Create array of Moving avarages values based on selected column from spreadsheet -----------
 $model_grid = createModelGrid($ma_arr,$startIndex,$len,$gridRows);//create our grid model of the pattern
-$out = checkGridPatterns($ma_arr,$startIndex,$len,$gridRows,$accuracy); // find all occurance of the grid patterns
+$out = checkGridPatterns($ma_arr,$startIndex,$len,$gridRows,$accuracy,$future_len); // find all occurance of the grid patterns
 $j_out["patterns"] = count($out);
 $tm = [];
 for ($i = 0;$i < count($out) ;$i++)
@@ -60,19 +61,43 @@ if ($startIndex - $future_len >= 0)
 }
 $pr = patternRange($a,$out,$future_len);     
 $j_out["predicted_range"] = $pr;
-$j_out["occurance"] = $tm;
+//$j_out["occurance"] = $tm;
 $pattern_data = array_slice($a,$startIndex,$len);
 $chart_data = [];
+$chart_predict_data = [];
+$j_out["linear_reg"] = [];
+$slope = 0.0;
 for ($i = 0;$i < count($out) ;$i++)
 {
+    
     $arr = array_slice($a,$out[$i],$len);
+    $lr = new linear_regression( $arr );
+    //$j_out["linear_reg"][] = ["m" => $lr->getGradient(),"c" => $lr->getIntercept()];
     $chart_data[] = $arr;
+    $predict = array_slice($a,$out[$i]-$future_len,$future_len);
+    $lr = new linear_regression( $predict );
+    $slope += $lr->getGradient();
+    //$j_out["linear_reg_predict"][] = ["m" => $lr->getGradient(),"c" => $lr->getIntercept()];
+    $chart_predict_data[] = $predict;
 }
+$j_out["linear_slope"] = $slope/count($out);
 $chart_data[] = $pattern_data;
+if ($startIndex > $future_len)
+{
+  $chart_predict_data[] = array_slice($a,$startIndex-$future_len,$future_len);
+}
 //echo "--------------------[".count($chart_data)."]------------------------\n";
 //echo 
 $ret = drawChart($chart_data/*$pattern_data*/,550,850,20);
+$ret_predict = drawChart($chart_predict_data/*$pattern_data*/,550,850,20);
 $j_out["graph"] = $ret;
+$j_out["graph_predict"] = $ret_predict;
 echo json_encode( $j_out);
+// Format the image SRC:  data:{mime};base64,{data};
+$src = 'data:image/png;base64,'.$ret;
+// Echo out a sample image
+echo '<img src="'.$src.'">'; 
+$src = 'data:image/png;base64,'.$ret_predict;
+echo '<img src="'.$src.'">'; 
 //echo "-------------------------------------------\n";
 ?>
