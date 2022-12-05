@@ -93,7 +93,7 @@ function realRenage($a,$startIndex,$len){
     $min = min($arr);
     $top += (trim($max," \"'") - trim($a[$startIndex]," \"'"));
     $bottom += (trim($a[$startIndex]," \"'") - trim($min," \"'") );
-    $ret = [$top,$bottom];
+    $ret = [round($top,5),round($bottom,5)];
     return $ret;
 }
 function patternRange($a,$startIndex,$len)
@@ -115,7 +115,7 @@ function patternRange($a,$startIndex,$len)
     }
     $top /= count($startIndex);
     $bottom /= count($startIndex);
-    $ret = [$top,$bottom];
+    $ret = [round($top,5),round($bottom,5)];
     return $ret;
 }
 function printGrid($grid,$gridRows,$grdName = "")
