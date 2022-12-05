@@ -91,8 +91,8 @@ function realRenage($a,$startIndex,$len){
    $arr = array_slice($a,$startIndex - ($len-1),$len);
    $max = max($arr);
     $min = min($arr);
-    $top += (trim($max," \"'") - trim($a[$startIndex  +1]," \"'"));
-    $bottom += (trim($a[$startIndex + 1]," \"'") - trim($min," \"'") );
+    $top += (trim($max," \"'") - trim($a[$startIndex]," \"'"));
+    $bottom += (trim($a[$startIndex]," \"'") - trim($min," \"'") );
     $ret = [$top,$bottom];
     return $ret;
 }
@@ -111,7 +111,7 @@ function patternRange($a,$startIndex,$len)
         $max = max($arr);
         $min = min($arr);
         $top += (trim($max," \"'") - trim($a[$startIndex[$i]]," \"'"));
-        $bottom += (trim($a[$startIndex[$i+1]]," \"'") - trim($min," \"'") );
+        $bottom += (trim($a[$startIndex[$i]]," \"'") - trim($min," \"'") );
     }
     $top /= count($startIndex);
     $bottom /= count($startIndex);

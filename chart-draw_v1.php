@@ -73,18 +73,18 @@ for ($i = 0;$i < count($out) ;$i++)
     $arr = array_slice($a,$out[$i],$len);
     $lr = new linear_regression( $arr );
     //$j_out["linear_reg"][] = ["m" => $lr->getGradient(),"c" => $lr->getIntercept()];
-    $chart_data[] = $arr;
+    $chart_data[] = array_reverse($arr);
     $predict = array_slice($a,$out[$i]-$future_len,$future_len);
     $lr = new linear_regression( $predict );
     $slope += $lr->getGradient();
     //$j_out["linear_reg_predict"][] = ["m" => $lr->getGradient(),"c" => $lr->getIntercept()];
-    $chart_predict_data[] = $predict;
+    $chart_predict_data[] = array_reverse($predict);
 }
-$j_out["linear_slope"] = $slope/count($out);
-$chart_data[] = $pattern_data;
+$j_out["linear_slope"] = (count($out) > 0) ? $slope/count($out): "NA";
+$chart_data[] = array_reverse($pattern_data);
 if ($startIndex > $future_len)
 {
-  $chart_predict_data[] = array_slice($a,$startIndex-$future_len,$future_len);
+  $chart_predict_data[] = array_reverse(array_slice($a,$startIndex-$future_len,$future_len));
 }
 //echo "--------------------[".count($chart_data)."]------------------------\n";
 //echo 
