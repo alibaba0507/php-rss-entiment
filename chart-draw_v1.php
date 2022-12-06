@@ -5,6 +5,7 @@ require_once("ml_model.php");
 require_once("Statistics.php");
 require_once("chart.php");
 require_once("linear_regression.class.php");
+require_once("pattern_encrypt_decrypt.php");
 //header("Content-Type:application/json");
 // for reading google spreadsheet as csv
 // 1. Publich spreadsheet to the web , and use this linl
@@ -44,8 +45,20 @@ $j_out["data_row"] = count($data);
 $ma_arr = [];
 $stat = new Statistics();
 $stat->moving_average($a,$ma,$ma_arr);
+// ------ Encripted pattern -----------------------------------------------------------------//
+$encrpt_pattern = [];
 //------------------------ Create array of Moving avarages values based on selected column from spreadsheet -----------
 $model_grid = createModelGrid($ma_arr,$startIndex,$len,$gridRows);//create our grid model of the pattern
+$encrpt_pattern["model"] = $model_grid;
+$encrpt_pattern["grid"] = $gridRows;
+$encrpt_pattern["length"] = $len;
+//echo '------------------Encryption ------------------------------\n';
+$enc = encrpt(json_encode($encrpt_pattern));
+$j_out["pattern_template"] = $enc;
+//echo $enc;
+//echo '\n-----------------Decrypt ------------------------------------------\n';
+//$dec = decrpt($enc);
+echo $dec;
 $out = checkGridPatterns($ma_arr,$startIndex,$len,$gridRows,$accuracy,$future_len); // find all occurance of the grid patterns
 $j_out["patterns"] = count($out);
 $tm = [];
@@ -53,7 +66,7 @@ for ($i = 0;$i < count($out) ;$i++)
 {
     $tm[] = ((string)$data[$out[$i]][0])." ".((string)$data[$out[$i]][1]); 
 }
-$pr = patternRange($a,$out,$future_len);
+//$pr = patternRange($a,$out,$future_len);
 if ($startIndex - $future_len >= 0)
 {
   $real_range = realRenage($a,$startIndex,$future_len);
@@ -67,19 +80,22 @@ $chart_data = [];
 $chart_predict_data = [];
 $j_out["linear_reg"] = [];
 $slope = 0.0;
+$reg_slope = 0.0;
 for ($i = 0;$i < count($out) ;$i++)
 {
     
     $arr = array_slice($a,$out[$i],$len);
-    $lr = new linear_regression( $arr );
+    $lr = new linear_regression( array_reverse($arr) );
+    $reg_slope += $lr->getGradient();
     //$j_out["linear_reg"][] = ["m" => $lr->getGradient(),"c" => $lr->getIntercept()];
     $chart_data[] = array_reverse($arr);
     $predict = array_slice($a,$out[$i]-$future_len,$future_len);
     $lr = new linear_regression( array_reverse($predict) );
     $slope += $lr->getGradient();
     //$j_out["linear_reg_predict"][] = ["m" => $lr->getGradient(),"c" => $lr->getIntercept()];
-    $chart_predict_data[] = array_reverse($predict);
+    $chart_predict_data[] = /*array_reverse*/($predict);
 }
+$j_out["linear_reg"] =  (count($out) > 0) ? round($reg_slope/count($out),4): "NA";
 $j_out["linear_slope"] = (count($out) > 0) ? round($slope/count($out),4): "NA";
 $chart_data[] = array_reverse($pattern_data);
 if ($startIndex > $future_len)
@@ -88,8 +104,8 @@ if ($startIndex > $future_len)
 }
 //echo "--------------------[".count($chart_data)."]------------------------\n";
 //echo 
-$ret = drawChart($chart_data/*$pattern_data*/,550,850,20);
-$ret_predict = drawChart($chart_predict_data/*$pattern_data*/,550,850,20);
+$ret = drawChart($chart_data/*$pattern_data*/,550,850,20,$gridRows);
+$ret_predict = drawChart($chart_predict_data/*$pattern_data*/,550,850,20,$gridRows);
 $j_out["graph"] = $ret;
 $j_out["graph_predict"] = $ret_predict;
 echo json_encode( $j_out);

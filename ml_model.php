@@ -107,7 +107,7 @@ function patternRange($a,$startIndex,$len)
     
     for ($i = 0;$i < count($startIndex);$i++)
     {
-        $arr = array_slice($a,$startIndex[$i+1] - ($len-1),$len); // backwards
+        $arr = array_slice($a,($startIndex[$i] - ($len))+1,$len); // backwards
         $max = max($arr);
         $min = min($arr);
         $top += (trim($max," \"'") - trim($a[$startIndex[$i]]," \"'"));

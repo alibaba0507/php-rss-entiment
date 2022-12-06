@@ -1,5 +1,5 @@
 <?php
-function drawChart($data,$img_width = 850,$img_height = 650,$margins = 20,$printImg = false){
+function drawChart($data,$img_width = 850,$img_height = 650,$margins = 20,$horizontal_lines = 20,$printImg = false){
   if (!$data || count($data) <= 0)
    return json_encode(["error" => "no data"]);
   $max_value = 0.0;
@@ -50,7 +50,7 @@ function drawChart($data,$img_width = 850,$img_height = 650,$margins = 20,$print
     $ratio= (float)($graph_height/($max_value - $min_value));
    
     # -------- Create scale and draw horizontal lines  --------
-    $horizontal_lines=20;
+    //$horizontal_lines=20;
     $horizontal_gap=$graph_height/$horizontal_lines;
     $vertical_gap=$graph_width/$horizontal_lines;
     for($i=1;$i<=$horizontal_lines;$i++){

@@ -49,9 +49,11 @@ function response($rss_url,$bd,$q,$result){
 						   {
 							    foreach($srch as $s)
 								{
-								  if ((strpos(strtolower($a->title), strtolower($s)) !== false)
-          									|| ($a->description != null && strpos(strtolower($a->description), strtolower($s)) !== false))
-										return true;
+								  //if ((strpos(strtolower($a->title), strtolower($s)) !== false)
+          							//		|| ($a->description != null && strpos(strtolower($a->description), strtolower($s)) !== false))
+									if (preg_match("/[^a-z0-9]".$s."/i", " ".$a->title." ") == 1 
+												|| preg_match("/[^a-z0-9]".$s."/i", " ".$a->description." ") == 1  )
+									return true;
 								}
 								return count($srch) > 0?false:true;
 						   }else
