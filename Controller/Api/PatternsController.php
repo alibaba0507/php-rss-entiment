@@ -41,9 +41,9 @@ class PatternsController extends BaseController
         $reduce_grid = $ptrns->applyFilters($grid,$gridRows,1);
         $rows = (int)sqrt(count($reduce_grid));
         //echo "=-========= rows[".$rows."]------------------\n";
-        print_r($reduce_grid);
+        //print_r($reduce_grid);
         $pool_grid = $ptrns->applyPooling($reduce_grid,$rows,$rows,2,2);
-        print_r($pool_grid);
+        //print_r($pool_grid);
     }
 }
 ?>
