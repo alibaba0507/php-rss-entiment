@@ -29,7 +29,7 @@ class PatternsController extends BaseController
         $this->gridRows = (!isset($arrQueryStringParams['min_efficiency']))?"5":trim($arrQueryStringParams["min_efficiency"],"\"'");
         $accuracy = (!isset($_GET['min_accuracy']))?"0.5":trim($_GET["min_accuracy"],"\"'");
         $header = (isset($arrQueryStringParams['header'])? true : false);
-        $this->$scv= new CsvUtils();
+        $this->$scv = new CsvUtils();
         $this->chart = new Chart();
         $url = trim($arrQueryStringParams["s"],"\"'");
         $this->data = $this->$scv->google_sheet_read_csv($url,-1,$header,$reverse_read);
@@ -48,6 +48,9 @@ class PatternsController extends BaseController
         $stat->moving_average($this->columnData,$ma,$ma_arr);
 
         $this->$charts = new StockChartPatterns($ma_arr);
+        $grid = $this->$charts->constractModel($this->startIndex,$this->len);
+        print_r($grid);
+        /*
         $grid = $this->$charts->createModelGrid($startIndx,$this->len,$this->gridRows);
         $ret["col_no"] = $col_no;
         $ret["strt_indx"] = $this->startIndex;
@@ -60,6 +63,7 @@ class PatternsController extends BaseController
             $encr,
             array('Content-Type: application/json', 'HTTP/1.1 200 OK')
         );
+        */
 
     }
     public function findAction()

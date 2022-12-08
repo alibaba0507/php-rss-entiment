@@ -9,29 +9,53 @@ class StockChartPatterns {
         $this->dataset = $dataset;
         $this->filters = $filters;
     }
-    
+    /*
+     * Will create seuence of 2x2 square 
+     * cells values , based on start index and
+     * len
+     */
+    public function constractModel($startIndex,$len,$gridRows = 2)
+    {
+       $model = [];
+       $end = (($len+$startIndex) >= count($this->dataset) - ($gridRows- 1))?($len+$startIndex)-($gridRows- 1):($len+$startIndex);
+       for ($i = $startIndex;$i < $end;$i++)
+       {
+         $grid = $this->createGrid($i,$gridRows,$gridRows);
+        // echo "--------------------------\n";
+         //print_r($grid);
+       //  echo "---------------------------\n";
+         $model[] = $this->arraySumEven($grid);
+       }
+       return $model;
+    }
     public function createGrid($startIndex,$len,$rows){
-        $grid = array_fill(0,((int)$rows*(int)$rows),-1);
+        $grid = array_fill(0,($rows**2),-1);
         if (!is_array($this->dataset)|| count($this->dataset)==0)
          return $grid;
-        //echo "-------- dataset[".count($this->dataset)."][".$startIndex."]------------------\n";
+        
         // slice array to find max and min values , that will be top and bottom rows
         $arr = array_slice($this->dataset,$startIndex,$len);
+       // echo "-------- dataset[".count($arr)."][".$startIndex."]------------------\n";
+        //print_r($arr);
         $max = max($arr);
         $min = min($arr);
-        $d_col = ($max-$min)/(int)$rows; // calc column unit
-        $d_row = count($arr)/(int)$rows; // calc row unit
-        
+        $d_col = round((($max-$min)/(int)$rows),5); // calc column unit
+        $d_row = round((count($arr)/(int)$rows),5); // calc row unit
+       // echo "-------- min[".$min."]max[".$max."]COL[".$d_col."]ROW[".$d_row."]------------------\n";
         for ($i = 0;$i < count($arr);$i++)
         { // fill the grid with 1 and 0
         $col = ($max - $arr[$i])/(float)$d_col;
         $col = ($col == 0.0)?0.1:$col;
-        $r = ceil(($i+1)/(float)$d_row);
-        $cell = (((ceil($col) - 1)*$rows)+$r);
-        $column = $cell % $rows;
+        $row = $i / $d_row;
+       // echo "--------------- C[".$col."]------------\n";
+        $r = 0;//ceil(($i+1)/(float)$d_row);
+        $cell = (((ceil($col) - 1)*$row)+$r);
+        //$column = $cell % $rows;
         $row = floor($cell / $rows);
         $grid[$cell] = 1;
+       // echo "----------------- Cell[".$cell."]---------------\n";
         }// end for
+      //  echo "------------------ End -----------------\n";
         return $grid;
     }
     function createModelGrid($start,$len,$rows)
