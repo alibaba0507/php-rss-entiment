@@ -2,10 +2,11 @@
 error_reporting(E_ALL ^ E_NOTICE);  
 require 'vendor/autoload.php';
 require_once("ml_model.php");
-require_once("Statistics.php");
+require_once(PROJECT_ROOT_PATH."Utils/Statistics.php");
 require_once("chart.php");
 require_once("linear_regression.class.php");
 require_once("pattern_encrypt_decrypt.php");
+use Patterns\Statistics;
 //header("Content-Type:application/json");
 // for reading google spreadsheet as csv
 // 1. Publich spreadsheet to the web , and use this linl

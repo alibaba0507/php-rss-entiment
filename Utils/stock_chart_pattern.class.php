@@ -76,7 +76,7 @@ class StockChartPatterns {
             $grid[($cell + $rows)] = 0.5;
             //echo "--- BOTTOM COL[".$row."] [".$cell."][".($cell + $rows)."]-----\n";
           }
-          /*if ($column > 1 && $row > 0 && ($grid[($cell - $rows) - 1] != 1 && $grid[($cell - $rows) - 1] != 0.5))
+          if ($column > 1 && $row > 0 && ($grid[($cell - $rows) - 1] != 1 && $grid[($cell - $rows) - 1] != 0.5))
           {
             $grid[($cell - $rows) - 1] = 0.25;
            // echo "--- TOP LEFT[".$row."] [".$cell."][".(($cell - $rows) - 1)."]-----\n";
@@ -97,7 +97,7 @@ class StockChartPatterns {
             $grid[($cell + $rows) + 1] = 0.25;
           //  echo "--- BOTTOM RIGHT[".$row."] [".$cell."][".(($cell + $rows) + 1)."]-----\n";
           }
-          */
+          
         }
         $this->model = $grid;
         return $this->model;
@@ -125,6 +125,7 @@ class StockChartPatterns {
                 $col = ($col == 0.0)?0.1:$col;
                 $r = ceil(($i+1)/(float)$d_row);
                 $cell = (((ceil($col) - 1)*$gridRows)+$r);
+                
                 $accuracy += $this->model[$cell];
             }
             $accuracy /= count($arr);
