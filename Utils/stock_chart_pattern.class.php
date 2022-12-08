@@ -11,7 +11,7 @@ class StockChartPatterns {
     }
 
     public function createGrid($startIndex,$len,$rows){
-        $grid = array_fill(0,((int)$rows*(int)$rows),0);
+        $grid = array_fill(0,((int)$rows*(int)$rows),-1);
         if (!is_array($this->dataset)|| count($this->dataset)==0)
          return $grid;
         // slice array to find max and min values , that will be top and bottom rows
@@ -33,7 +33,12 @@ class StockChartPatterns {
         }// end for
         return $grid;
     }
-
+    
+    /**
+     * Depricated: replaced by 
+     * @subGridToArray(array $grid,$rows,$cols,$startIndex,$sub_rows,$sub_cols,$step = 1,$print = false)
+     * as more generic
+     */
     function calcFilter(array $grid,$startIndex,$rows)
     {
         $sum = 0.0;
@@ -47,16 +52,35 @@ class StockChartPatterns {
         }
         return ($sum / ($this->filters**2));
     }
-
+    function arraySumEven(array $grid)
+    {
+      $counter = 1;
+      $sum = 0.0;
+      foreach ($grid as &$data) {
+         if (($counter % 2))
+           $sum += $data;
+          else
+            $sum -= $data;
+          $counter++;
+      }// end for
+      return $sum;
+    } 
     function applyFilters(array $grid,$rows,$step = 1)
     {
       $reduce_grid = [];
+      //$tmp = [-1, 1];
+      //$tmp_1 = [1, -1];
+      //echo "------[".($this->arraySumEven($tmp))."] - [" .($this->arraySumEven($tmp_1))."]------\n";
       for ($i= 0;$i < count($grid);$i+= $step)
       {
         $r = ($rows - ceil(($i+1)/$rows));
         //$reduce_grid[] = $this->calcFilter($grid,$i,$rows);
-      $grd = $this->subGridToArray($grid,$rows,$rows,$i,$this->filters,$this->filters,1/*,($i < 4)*/);
-        $reduce_grid[] = array_sum($grd)/($this->filters**2);
+        $grd = $this->subGridToArray($grid,$rows,$rows,$i,$this->filters,$this->filters,1/*,($i < 4)*/);
+        $sum_even = $this->arraySumEven($grd);
+        //$sum_norm = array_sum($grd);
+       // echo "------------------ Sum Even[".$sum_even."] Norm[".$sum_norm."]-----------\n";
+        //print_r($grd);
+        $reduce_grid[] = /*array_sum*/$sum_even/(/*$this->filters**2*/count($grd));
         if (($rows - ($i % $rows)) < $this->filters)
         {    
           //  echo "----------------[".$i."]-------\n";
@@ -101,7 +125,7 @@ class StockChartPatterns {
         for ($i= 0;$i < count($grid);$i+=$step)
         {
           $r = ($rows - ceil(($i+1)/$rows));
-        $p = $this->subGridToArray($grid,$rows,$rows,$i,$w_size,$w_size/*,1,($i < 1)*/);
+          $p = $this->subGridToArray($grid,$rows,$rows,$i,$w_size,$w_size/*,1,($i < 1)*/);
           //if ($i < 1)
           //  print_r($p);
           $reduce_grid[] = max( $p);
