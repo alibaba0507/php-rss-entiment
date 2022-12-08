@@ -9,11 +9,12 @@ class StockChartPatterns {
         $this->dataset = $dataset;
         $this->filters = $filters;
     }
-
+    
     public function createGrid($startIndex,$len,$rows){
         $grid = array_fill(0,((int)$rows*(int)$rows),-1);
         if (!is_array($this->dataset)|| count($this->dataset)==0)
          return $grid;
+        //echo "-------- dataset[".count($this->dataset)."][".$startIndex."]------------------\n";
         // slice array to find max and min values , that will be top and bottom rows
         $arr = array_slice($this->dataset,$startIndex,$len);
         $max = max($arr);
@@ -33,7 +34,115 @@ class StockChartPatterns {
         }// end for
         return $grid;
     }
+    function createModelGrid($start,$len,$rows)
+    {
+        $grid = array_fill(0,((int)$rows*(int)$rows),0);
+        if (!is_array($this->dataset)|| count($this->dataset)==0)
+         return $grid;
+        
+        $arr = array_slice($this->dataset,$start,$len);
+        $max = max($arr);
+        $min = min($arr);
+        $d_col = ($max-$min)/(int)$rows;
+        $d_row = count($arr)/(int)$rows;
+        for ($i = 0;$i < count($arr);$i++)
+        {
+          $col = ($max - $arr[$i])/(float)$d_col;
+          $col = ($col == 0.0)?0.1:$col;
+          $r = ceil(($i+1)/(float)$d_row);
+          $cell = (((ceil($col) - 1)*$rows)+$r);
+          $column = $cell % $rows;
+          $row = floor($cell / $rows);
+          $grid[$cell] = 1;
+          if ($column > 1 && $grid[($cell - 1)] != 1)
+          {
     
+            $grid[($cell - 1)] = 0.25;
+           // echo "--- DWON COL[".$column."] [".$cell."][".($cell - 1)."]-----\n";
+          }
+          if ($column < ($rows - 1) && $grid[($cell + 1)] != 1)
+          {
+    
+            $grid[($cell + 1)] = 0.25;
+          //  echo "--- UP COL[".$column."] [".$cell."][".($cell + 1)."]-----\n";
+          }
+          if ($row > 0 &&  $grid[($cell - $rows)] != 1)
+          {  
+            $grid[($cell - $rows)] = 0.5;
+            //echo "--- TOP COL[".$row."] [".$cell."][".($cell - $rows)."]-----\n";
+          }
+          if ($row < ($rows - 1) && $grid[($cell + $rows)] != 1)
+          {
+            $grid[($cell + $rows)] = 0.5;
+            //echo "--- BOTTOM COL[".$row."] [".$cell."][".($cell + $rows)."]-----\n";
+          }
+          /*if ($column > 1 && $row > 0 && ($grid[($cell - $rows) - 1] != 1 && $grid[($cell - $rows) - 1] != 0.5))
+          {
+            $grid[($cell - $rows) - 1] = 0.25;
+           // echo "--- TOP LEFT[".$row."] [".$cell."][".(($cell - $rows) - 1)."]-----\n";
+          }
+          if ($column < ($rows - 1) && $row > 0 && ($grid[($cell - $rows) + 1] != 1 && $grid[($cell - $rows) + 1] != 0.5 ))
+          {
+            $grid[($cell - $rows) + 1] = 0.25;
+           // echo "--- TOP RIGHT[".$row."] [".$cell."][".(($cell - $rows) + 1)."]-----\n";
+          }
+          //---------------
+          if ($column > 1 && $row < ($rows - 1) && ($grid[($cell + $rows) - 1] != 1 && $grid[($cell + $rows) - 1] != 0.5))
+          {
+            $grid[($cell + $rows) - 1] = 0.25;
+           // echo "--- BOTTOM LEFT[".$row."] [".$cell."][".(($cell + $rows) - 1)."]-----\n";
+          }
+          if ($column < ($rows - 1) && $row < ($rows - 1) && ($grid[($cell + $rows) + 1] != 1 && $grid[($cell + $rows) + 1] != 0.5))
+          {
+            $grid[($cell + $rows) + 1] = 0.25;
+          //  echo "--- BOTTOM RIGHT[".$row."] [".$cell."][".(($cell + $rows) + 1)."]-----\n";
+          }
+          */
+        }
+        $this->model = $grid;
+        return $this->model;
+    }
+    function checkGridPatterns($patternStart,$len,$gridRows,$minMatch = 0.6,$predicted_len = 0)
+    {
+        if (!$this->model)
+          $this->createModelGrid($patternStart,$len,$gridRows);
+        //$model_grid = createModelGrid($a,$patternStart,$len,$gridRows);
+        $foundAt = [];
+        $grdCnt = 0;
+        $predicted_len = ($patternStart + $len < $predicted_len)?$predicted_len - ($patternStart + $len):0;
+        for ($j = $patternStart + $len + $predicted_len;$j < count($this->model)-$len;$j++)
+      {
+            $arr = array_slice($this->dataset,$j,$len);
+            $max = max($arr);
+            $min = min($arr);
+            $d_col = ($max-$min)/(int)$gridRows;
+            
+            $d_row = count($arr)/(int)$gridRows;
+            $accuracy = 0.0;
+            for ($i = 0;$i < count($arr);$i++)
+            {
+                $col = ($max - $arr[$i])/(float)$d_col;
+                $col = ($col == 0.0)?0.1:$col;
+                $r = ceil(($i+1)/(float)$d_row);
+                $cell = (((ceil($col) - 1)*$gridRows)+$r);
+                $accuracy += $this->model[$cell];
+            }
+            $accuracy /= count($arr);
+            if ($accuracy >= $minMatch)
+            {
+              /* if ($grdCnt < 1)
+                {
+                    $grd = createModelGrid($a,$j,$len,$gridRows);
+                    printGrid($grd,$gridRows,"Compare[".$accuracy."]accuracy Grid");
+                    $grdCnt++;
+                }
+                */
+                $foundAt[] = $j;
+                $j += $len;
+            }
+      }// end for
+      return $foundAt;
+    }
     /**
      * Depricated: replaced by 
      * @subGridToArray(array $grid,$rows,$cols,$startIndex,$sub_rows,$sub_cols,$step = 1,$print = false)
