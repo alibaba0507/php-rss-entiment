@@ -22,11 +22,13 @@ if ((!isset($uri[$indx+2]) || !isset($uri[$indx + 3])))
     $objFeedController->{$strMethodName}();
 }else if ($uri[$indx+2] == 'patterns')
 {
-    if ($uri[$indx + 3] != 'find')
+  //  echo "=----ddddd----------\n";
+    if ($uri[$indx + 3] != 'find'&& $uri[$indx + 3] != 'model')
     {
         header("HTTP/1.1 404 Not Found");
         exit();  
     }
+   // echo "=--------wwww------\n";
     require PROJECT_ROOT_PATH . "/Controller/Api/PatternsController.php";
     $objFeedController = new PatternsController();
     $strMethodName = $uri[$indx+3] . 'Action';
