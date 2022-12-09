@@ -14,21 +14,21 @@ class StockChartPatterns {
      * cells values , based on start index and
      * len
      */
-    public function constractModel($startIndex,$len,$gridRows = 2)
+    public function constractModel($startIndex,$len,$gridRows = 2,$minRange = 0)
     {
        $model = [];
        $end = (($len+$startIndex) >= count($this->dataset) - ($gridRows- 1))?($len+$startIndex)-($gridRows- 1):($len+$startIndex);
        for ($i = $startIndex;$i < $end;$i++)
        {
-         $grid = $this->createGrid($i,$gridRows,$gridRows);
+         $grid = $this->createGrid($i,$gridRows,$gridRows,$minRange);
         // echo "--------------------------\n";
-         //print_r($grid);
+         print_r($grid);
        //  echo "---------------------------\n";
          $model[] = $this->arraySumEven($grid);
        }
        return $model;
     }
-    public function createGrid($startIndex,$len,$rows){
+    public function createGrid($startIndex,$len,$rows,$minRange = 0){
         $grid = array_fill(0,($rows**2),-1);
         if (!is_array($this->dataset)|| count($this->dataset)==0)
          return $grid;
@@ -36,24 +36,24 @@ class StockChartPatterns {
         // slice array to find max and min values , that will be top and bottom rows
         $arr = array_slice($this->dataset,$startIndex,$len);
        // echo "-------- dataset[".count($arr)."][".$startIndex."]------------------\n";
-        //print_r($arr);
+        print_r($arr);
         $max = max($arr);
         $min = min($arr);
-        $d_col = round((($max-$min)/(int)$rows),5); // calc column unit
-        $d_row = round((count($arr)/(int)$rows),5); // calc row unit
-       // echo "-------- min[".$min."]max[".$max."]COL[".$d_col."]ROW[".$d_row."]------------------\n";
+        $minRange = max(($max-$min),$minRange);
+        $d_row = (($minRange/(int)$rows)); // calc column unit
+        $d_col = ((count($arr)/(int)$rows)); // calc row unit
+        echo "-------- min[".$min."]max[".$max."]COL[".$d_col."]ROW[".$d_row."]------------------\n";
         for ($i = 0;$i < count($arr);$i++)
         { // fill the grid with 1 and 0
-        $col = ($max - $arr[$i])/(float)$d_col;
-        $col = ($col == 0.0)?0.1:$col;
-        $row = $i / $d_row;
-       // echo "--------------- C[".$col."]------------\n";
-        $r = 0;//ceil(($i+1)/(float)$d_row);
-        $cell = (((ceil($col) - 1)*$row)+$r);
-        //$column = $cell % $rows;
-        $row = floor($cell / $rows);
-        $grid[$cell] = 1;
-       // echo "----------------- Cell[".$cell."]---------------\n";
+            $row = ($minRange - ($max - $arr[$i]))/$d_row; // will give as real col
+            $row = (round($row) == 0)?1:round($row);
+            //$col += 1; // $i zero based
+            echo "--------------- R[".$row."][".($max - $arr[$i])."][".$arr[$i]."]------------\n";
+            $col = (($i+1)%$rows);//((($i+1)%$rows) != 0)?(($i+1)%$rows):$rows;
+            echo "--------------- C[".$col."][".(($i+1)%$rows)."]----------------------------------------------\n";
+            $cell = (($row*$rows))-$col;
+            $grid[$cell-1] = 1;
+            echo "----------------- Cell[".($cell-1)."]---------------\n";
         }// end for
       //  echo "------------------ End -----------------\n";
         return $grid;

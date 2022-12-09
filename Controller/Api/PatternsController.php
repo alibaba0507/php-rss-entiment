@@ -48,7 +48,7 @@ class PatternsController extends BaseController
         $stat->moving_average($this->columnData,$ma,$ma_arr);
 
         $this->$charts = new StockChartPatterns($ma_arr);
-        $grid = $this->$charts->constractModel($this->startIndex,$this->len);
+        $grid = $this->$charts->constractModel($this->startIndex,$this->len,3,0.008);
         print_r($grid);
         /*
         $grid = $this->$charts->createModelGrid($startIndx,$this->len,$this->gridRows);
