@@ -21,15 +21,15 @@ class StockChartPatterns {
        for ($i = $startIndex;$i < $end;$i++)
        {
          $grid = $this->createGrid($i,$gridRows,$gridRows,$minRange);
-         echo "--------------------------\n";
-         print_r($grid);
-         echo "---------------------------\n";
+        // echo "--------------------------\n";
+        // print_r($grid);
+         //echo "---------[".$this->arraySumEven($grid)."]------------------\n";
          $model[] = $this->arraySumEven($grid);
        }
        return $model;
     }
     public function createGrid($startIndex,$len,$rows,$minRange = 0){
-        $grid = array_fill(0,($rows**2),-1);
+        $grid = array_fill(0,($rows**2),0);
         if (!is_array($this->dataset)|| count($this->dataset)==0)
          return $grid;
         
@@ -190,14 +190,31 @@ class StockChartPatterns {
     {
       $counter = 1;
       $sum = 0.0;
-      foreach ($grid as &$data) {
-         if (($counter % 2))
-           $sum += $data;
-          else
-            $sum -= $data;
+      $operator = "";
+      $old_sum = 0;
+      $bin = implode("", $grid);
+      $bin = trim($bin,'0');
+      //echo "-------[".$bin."]---------\n";
+      return bindec($bin);
+      /*foreach ($grid as $data) {
+         $old_sum = $sum;
+         $operator = (($counter % 2) === 0)?"-":"+";
+         $d = ($sum xor $data)?1:0;
+         //if (($counter % 2) === 0)
+         //  $sum -= $data;
+         // else
+         // {
+          //  echo '---------------SUM['.$sum."]------[".$data."]----\n";
+            $sum += ($d);
+          //  echo '---------------SUM['.$sum."]-[".$data."]----\n";
+         // }
+         // echo "-------[".$old_sum."][".$operator."][".$data."] = [".$sum."]-------\n";
           $counter++;
       }// end for
+      print_r($grid);
+      echo '---------------SUM['.$sum."]----\n";
       return $sum;
+      */
     } 
     function applyFilters(array $grid,$rows,$step = 1)
     {
