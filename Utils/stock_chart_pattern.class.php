@@ -21,9 +21,9 @@ class StockChartPatterns {
        for ($i = $startIndex;$i < $end;$i++)
        {
          $grid = $this->createGrid($i,$gridRows,$gridRows,$minRange);
-        // echo "--------------------------\n";
+         echo "--------------------------\n";
          print_r($grid);
-       //  echo "---------------------------\n";
+         echo "---------------------------\n";
          $model[] = $this->arraySumEven($grid);
        }
        return $model;
@@ -36,24 +36,24 @@ class StockChartPatterns {
         // slice array to find max and min values , that will be top and bottom rows
         $arr = array_slice($this->dataset,$startIndex,$len);
        // echo "-------- dataset[".count($arr)."][".$startIndex."]------------------\n";
-        print_r($arr);
+        //print_r($arr);
         $max = max($arr);
         $min = min($arr);
         $minRange = max(($max-$min),$minRange);
         $d_row = (($minRange/(int)$rows)); // calc column unit
         $d_col = ((count($arr)/(int)$rows)); // calc row unit
-        echo "-------- min[".$min."]max[".$max."]COL[".$d_col."]ROW[".$d_row."]------------------\n";
+        //echo "-------- min[".$min."]max[".$max."]COL[".$d_col."]ROW[".$d_row."]------------------\n";
         for ($i = 0;$i < count($arr);$i++)
         { // fill the grid with 1 and 0
             $row = ($minRange - ($max - $arr[$i]))/$d_row; // will give as real col
             $row = (round($row) == 0)?1:round($row);
             //$col += 1; // $i zero based
-            echo "--------------- R[".$row."][".($max - $arr[$i])."][".$arr[$i]."]------------\n";
+          //  echo "--------------- R[".$row."][".($max - $arr[$i])."][".$arr[$i]."]------------\n";
             $col = (($i+1)%$rows);//((($i+1)%$rows) != 0)?(($i+1)%$rows):$rows;
-            echo "--------------- C[".$col."][".(($i+1)%$rows)."]----------------------------------------------\n";
+          //  echo "--------------- C[".$col."][".(($i+1)%$rows)."]----------------------------------------------\n";
             $cell = (($row*$rows))-$col;
             $grid[$cell-1] = 1;
-            echo "----------------- Cell[".($cell-1)."]---------------\n";
+          //  echo "----------------- Cell[".($cell-1)."]---------------\n";
         }// end for
       //  echo "------------------ End -----------------\n";
         return $grid;
