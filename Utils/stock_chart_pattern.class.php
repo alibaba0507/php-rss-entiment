@@ -24,7 +24,7 @@ class StockChartPatterns {
         // echo "--------------------------\n";
         // print_r($grid);
          //echo "---------[".$this->arraySumEven($grid)."]------------------\n";
-         $model[] = $this->arraySumEven($grid);
+         $model[] = $grid;//$this->arraySumEven($grid);
        }
        return $model;
     }
